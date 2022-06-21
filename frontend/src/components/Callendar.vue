@@ -1,7 +1,7 @@
 <template>
     <div>
         <FullCalendar :options="calendarOptions" ref="calendar" />
-        <EventModal v-if="isModalShow" :selectedData="selectedData" :calendarApi="calendarApi" />
+        <EventModal v-if="isModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitModal" />
     </div>
 </template>
 
@@ -74,6 +74,9 @@ export default {
             textContent.innerHTML = `${args.event.title} / ${args.event.extendedProps.classroom} / ${args.event.extendedProps.teacher}`;
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
+        },
+        handleSubmitModal() {
+            this.isModalShow = false;
         },
     },
     mounted() {

@@ -23,6 +23,7 @@
 import { v4 as uuidv4 } from "uuid";
 export default {
     name: "EventModal",
+    emits: ["handleSubmit"],
     props: {
         selectedData: Object,
         calendarApi: Object,
@@ -47,6 +48,7 @@ export default {
                     teacher: this.teacher,
                 },
             });
+            this.$emit("handleSubmit");
         },
     },
     mounted() {
