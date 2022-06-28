@@ -89,6 +89,10 @@ export default {
     },
     mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
+
+        fetch("https://127.0.0.1:8000/event")
+        .then(response => response.json())
+        .then(data => console.log(data))
     },
 };
 </script>
