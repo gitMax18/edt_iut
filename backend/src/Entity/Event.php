@@ -2,40 +2,57 @@
 
 namespace App\Entity;
 
-use App\Repository\EventEntityRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\EventRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EventEntityRepository::class)]
-class EventEntity
+/**
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass=EventRepository::class)
+ */
+class Event
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private $id;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $start_date;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $end_date;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $type;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
     private $created_at;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
     private $updated_at;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $classroom;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $cours;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $teacher;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $course;
 
     public function getId(): ?int
     {
@@ -102,14 +119,14 @@ class EventEntity
         return $this;
     }
 
-    public function getClassroom(): ?string
+    public function getCours(): ?string
     {
-        return $this->classroom;
+        return $this->cours;
     }
 
-    public function setClassroom(?string $classroom): self
+    public function setCours(string $cours): self
     {
-        $this->classroom = $classroom;
+        $this->cours = $cours;
 
         return $this;
     }
@@ -122,18 +139,6 @@ class EventEntity
     public function setTeacher(string $teacher): self
     {
         $this->teacher = $teacher;
-
-        return $this;
-    }
-
-    public function getCourse(): ?string
-    {
-        return $this->course;
-    }
-
-    public function setCourse(string $course): self
-    {
-        $this->course = $course;
 
         return $this;
     }

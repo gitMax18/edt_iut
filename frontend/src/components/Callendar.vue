@@ -90,12 +90,8 @@ export default {
     },
     mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
-        fetch("http://localhost:8000/api/event", {
-            mode: "no-cors",
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-        })
+
+        fetch("http://localhost:8000/event")
             .then((res) => {
                 console.log(res);
                 if (!res.ok) {

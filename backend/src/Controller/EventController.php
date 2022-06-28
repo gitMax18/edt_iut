@@ -2,22 +2,18 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EventController extends AbstractController
 {
-    #[Route('/api/event', name: 'app_event')]
-    public function index(Request $request): JsonResponse
+    /**
+     * @Route("/event", name="app_event")
+     */
+    public function index(): Response
     {
-
-        // dd($request);
-
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/EventController.php',
-        ]);
+        return $this->json(['Hello' => 'there']);
     }
 }
