@@ -14,6 +14,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import AddEventModal from "./AddEventModal.vue";
 import UpdateEventModal from "./UpdateEventModal.vue";
+import axios from "axios";
 export default {
     name: "Calendar",
     components: {
@@ -89,6 +90,21 @@ export default {
     },
     mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
+        fetch("http://localhost:8000/api/event", {
+            mode: "no-cors",
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+        })
+            .then((res) => {
+                console.log(res);
+                if (!res.ok) {
+                    throw new Error("Un probleme est survenue");
+                }
+                res.json();
+            })
+            .then((data) => console.log(data))
+            .catch((err) => console.log(err.message));
     },
 };
 </script>
