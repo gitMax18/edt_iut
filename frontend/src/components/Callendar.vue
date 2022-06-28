@@ -1,7 +1,8 @@
 <template>
     <div>
         <FullCalendar :options="calendarOptions" ref="calendar" />
-        <EventModal v-if="isModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitModal" />
+        <AddEventModal v-if="isCreateModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitCreateModal" />
+        <UpdateEventModal v-if="isUpdateModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitUpdateModal" />
     </div>
 </template>
 
@@ -11,12 +12,14 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import EventModal from "./EventModal.vue";
+import AddEventModal from "./AddEventModal.vue";
+import UpdateEventModal from "./UpdateEventModal.vue";
 export default {
     name: "Calendar",
     components: {
         FullCalendar,
-        EventModal,
+        AddEventModal,
+        UpdateEventModal,
     },
     data() {
         return {
@@ -46,23 +49,25 @@ export default {
                 eventContent: this.displayEventText,
             },
             calendarApi: null,
-            isModalShow: false,
+            isCreateModalShow: false,
+            isUpdateModalShow: false,
             selectedData: null,
         };
     },
     methods: {
         handleDateSelect(selectData) {
             this.selectedData = selectData;
-            this.isModalShow = true;
+            this.isCreateModalShow = true;
         },
         handleEventClick(clickData) {
-            if (confirm(`Are you sure you want to delete the event '${clickData.event.title}'`)) {
-                clickData.event.remove();
-            }
+            this.selectedData = clickData;
+            this.isUpdateModalShow = true;
         },
         handleEvents() {},
         handleAddEvent() {},
-        handleChangeEvent() {},
+        handleChangeEvent(event) {
+            console.log("changeEvent", event);
+        },
         handleRemoveEvent() {},
         toggleShowWeekend() {
             this.calendarOptions.weekends = !this.calendarOptions.weekends;
@@ -75,8 +80,11 @@ export default {
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
         },
-        handleSubmitModal() {
-            this.isModalShow = false;
+        handleSubmitCreateModal() {
+            this.isCreateModalShow = false;
+        },
+        handleSubmitUpdateModal() {
+            this.isUpdateModalShow = false;
         },
     },
     mounted() {

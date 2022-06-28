@@ -21,11 +21,9 @@ export default {
 :root {
     font-size: 62.5%;
 }
-
 body {
     font-size: 1.6rem;
 }
-
 *,
 ::before,
 ::after {
@@ -33,7 +31,6 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
-
 .main-container {
     display: flex;
 }

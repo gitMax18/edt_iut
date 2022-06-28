@@ -7,8 +7,11 @@
                 <input type="text" id="course" v-model="course" />
             </div>
             <div class="input-container">
-                <label for="classroom">Salle: </label>
-                <input type="text" id="classroom" v-model="classroom" />
+                <label for="classroomType">Type salle: </label>
+                <select name="classroomType" id="classroomType" v-model="choosenClassroom">
+                    <option value="">Choisissez un type de salle</option>
+                    <option v-for="type in classroomTypes" :key="type" :value="type">{{ type }}</option>
+                </select>
             </div>
             <div class="input-container">
                 <label for="teacher">Professeur: </label>
@@ -21,18 +24,21 @@
 
 <script>
 import { v4 as uuidv4 } from "uuid";
+import { classroomType } from "@/etc.js";
 export default {
-    name: "EventModal",
+    name: "AddEventModal",
     emits: ["handleSubmit"],
     props: {
         selectedData: Object,
         calendarApi: Object,
+        eventData: Object,
     },
     data() {
         return {
             course: "",
-            classroom: "",
             teacher: "",
+            classroomTypes: classroomType,
+            choosenClassroom: "",
         };
     },
     methods: {
@@ -44,7 +50,7 @@ export default {
                 start: this.selectedData.startStr,
                 end: this.selectedData.endStr,
                 extendedProps: {
-                    classroom: this.classroom,
+                    classroom: this.choosenClassroom,
                     teacher: this.teacher,
                 },
             });
@@ -52,7 +58,10 @@ export default {
         },
     },
     mounted() {
-        // console.log(this.selectedData);
+        console.log(this.selectedData);
+    },
+    updated() {
+        console.log(this.choosenClassroom);
     },
 };
 </script>

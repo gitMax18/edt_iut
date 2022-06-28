@@ -20,7 +20,7 @@ export default {
 .appButton {
     display: block;
     padding: 1rem 1.5rem;
-    border-radius: 1rem;
+    border-radius: $border-radius;
     margin: 0.5rem;
     outline: none;
     border: none;
