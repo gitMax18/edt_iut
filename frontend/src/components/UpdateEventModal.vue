@@ -17,7 +17,7 @@
                 <label for="teacher">Professeur: </label>
                 <input type="text" id="teacher" v-model="teacher" />
             </div>
-            <button @click.prevent="handleSubmit">Valider</button>
+            <button @click.prevent="handleUpdate">Valider</button>
             <button @click.prevent="handleDelete">Supprimer</button>
         </form>
     </div>
@@ -25,35 +25,61 @@
 
 <script>
 import { classroomType } from "@/etc.js";
+import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "updateEventModal",
+    mixins: [useFetch],
     props: {
-        selectedData: Object,
+        selectedDates: Object,
         calendarApi: Object,
     },
     data() {
         return {
-            course: this.selectedData.event.title,
-            teacher: this.selectedData.event.extendedProps.teacher,
-            choosenClassroom: this.selectedData.event.extendedProps.classroom,
+            course: this.selectedDates.event.title,
+            teacher: this.selectedDates.event.extendedProps.teacher,
+            choosenClassroom: this.selectedDates.event.extendedProps.classroom,
             classroomTypes: classroomType,
         };
     },
     methods: {
-        handleSubmit() {
+        async handleUpdate() {
+            await this.fetchApi(`event/${this.selectedDates.event.id}`, "PUT", {
+                course: this.course,
+                teacher: this.teacher,
+                classroom: this.choosenClassroom,
+                startAt: this.selectedDates.event.start,
+                endAt: this.selectedDates.event.end,
+            });
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+            } else {
+                console.log(this.dataApi);
+                this.selectedDates.event.setProp("title", this.course);
+                this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
+                this.selectedDates.event.setExtendedProp("teacher", this.teacher);
+            }
+
             this.calendarApi.unselect();
-            this.selectedData.event.setProp("title", this.course);
-            this.selectedData.event.setExtendedProp("classroom", this.choosenClassroom);
-            this.selectedData.event.setExtendedProp("teacher", this.teacher);
+
             this.$emit("handleSubmit");
         },
 
-        handleDelete() {
-            this.selectedData.event.remove();
+        async handleDelete() {
+            console.log(this.selectedDates.event.id);
+
+            await this.fetchApi(`event/${this.selectedDates.event.id}`, "DELETE");
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+            } else {
+                console.log(this.dataApi);
+                this.selectedDates.event.remove();
+            }
+
             this.$emit("handleSubmit");
         },
     },
-    mounted() {},
 };
 </script>
 

@@ -1,8 +1,8 @@
 <template>
     <div>
         <FullCalendar :options="calendarOptions" ref="calendar" />
-        <AddEventModal v-if="isCreateModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitCreateModal" />
-        <UpdateEventModal v-if="isUpdateModalShow" :selectedData="selectedData" :calendarApi="calendarApi" @handleSubmit="handleSubmitUpdateModal" />
+        <AddEventModal v-if="isCreateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleSubmit="handleSubmitCreateModal" />
+        <UpdateEventModal v-if="isUpdateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleSubmit="handleSubmitUpdateModal" />
     </div>
 </template>
 
@@ -14,9 +14,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import AddEventModal from "./AddEventModal.vue";
 import UpdateEventModal from "./UpdateEventModal.vue";
-import axios from "axios";
+import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "Calendar",
+    mixins: [useFetch],
     components: {
         FullCalendar,
         AddEventModal,
@@ -35,11 +36,13 @@ export default {
                 editable: true,
                 selectable: true,
                 weekends: false,
+                timeZone: "local",
                 locales: "fr",
                 // selectMirror: true,
                 allDaySlot: false,
                 slotMinTime: "06:00:00",
                 slotMaxTime: "19:00:00",
+                slotDuration: "00:15:00",
                 events: [],
                 select: this.handleDateSelect,
                 eventClick: this.handleEventClick,
@@ -52,16 +55,16 @@ export default {
             calendarApi: null,
             isCreateModalShow: false,
             isUpdateModalShow: false,
-            selectedData: null,
+            selectedDates: null,
         };
     },
     methods: {
         handleDateSelect(selectData) {
-            this.selectedData = selectData;
+            this.selectedDates = selectData;
             this.isCreateModalShow = true;
         },
         handleEventClick(clickData) {
-            this.selectedData = clickData;
+            this.selectedDates = clickData;
             this.isUpdateModalShow = true;
         },
         handleEvents() {},
@@ -88,19 +91,16 @@ export default {
             this.isUpdateModalShow = false;
         },
     },
-    mounted() {
+    async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
 
-        fetch("http://localhost:8000/event")
-            .then((res) => {
-                console.log(res);
-                if (!res.ok) {
-                    throw new Error("Un probleme est survenue");
-                }
-                res.json();
-            })
-            .then((data) => console.log(data))
-            .catch((err) => console.log(err.message));
+        await this.fetchApi("event");
+
+        if (this.isFetchError) {
+            console.log(this.errorMessageApi);
+        } else {
+            this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
+        }
     },
 };
 </script>

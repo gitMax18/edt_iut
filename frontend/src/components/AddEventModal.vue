@@ -23,13 +23,14 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
 import { classroomType } from "@/etc.js";
+import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "AddEventModal",
     emits: ["handleSubmit"],
+    mixins: [useFetch],
     props: {
-        selectedData: Object,
+        selectedDates: Object,
         calendarApi: Object,
         eventData: Object,
     },
@@ -42,26 +43,31 @@ export default {
         };
     },
     methods: {
-        handleSubmit() {
-            this.calendarApi.unselect();
-            this.calendarApi.addEvent({
-                id: uuidv4(),
+        async handleSubmit() {
+            const newEvent = {
                 title: this.course,
-                start: this.selectedData.startStr,
-                end: this.selectedData.endStr,
+                start: this.selectedDates.startStr,
+                end: this.selectedDates.endStr,
                 extendedProps: {
                     classroom: this.choosenClassroom,
                     teacher: this.teacher,
                 },
-            });
+            };
+
+            await this.fetchApi("event", "POST", this.transformEventToApiEvent(newEvent));
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+            } else {
+                this.calendarApi.addEvent({ ...newEvent, id: this.dataApi.eventId });
+            }
+
+            this.calendarApi.unselect();
             this.$emit("handleSubmit");
         },
     },
     mounted() {
-        console.log(this.selectedData);
-    },
-    updated() {
-        console.log(this.choosenClassroom);
+        console.log(this.selectedDates);
     },
 };
 </script>
