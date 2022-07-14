@@ -20,6 +20,7 @@
             <button @click.prevent="handleUpdate">Valider</button>
             <button @click.prevent="handleDelete">Supprimer</button>
         </form>
+        <button class="exit-btn" @click="$emit('handleCloseModal')">X</button>
     </div>
 </template>
 
@@ -29,6 +30,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "updateEventModal",
     mixins: [useFetch],
+    emits: ["handleCloseModal"],
     props: {
         selectedDates: Object,
         calendarApi: Object,
@@ -43,26 +45,29 @@ export default {
     },
     methods: {
         async handleUpdate() {
-            await this.fetchApi(`event/${this.selectedDates.event.id}`, "PUT", {
-                course: this.course,
-                teacher: this.teacher,
-                classroom: this.choosenClassroom,
-                startAt: this.selectedDates.event.start,
-                endAt: this.selectedDates.event.end,
-            });
+            // await this.fetchApi(`event/${this.selectedDates.event.id}`, "PUT", {
+            //     course: this.course,
+            //     teacher: this.teacher,
+            //     classroom: this.choosenClassroom,
+            //     startAt: this.selectedDates.event.start,
+            //     endAt: this.selectedDates.event.end,
+            // });
 
-            if (this.isFetchError) {
-                console.log(this.errorMessageApi);
-            } else {
-                console.log(this.dataApi);
-                this.selectedDates.event.setProp("title", this.course);
-                this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
-                this.selectedDates.event.setExtendedProp("teacher", this.teacher);
-            }
+            // if (this.isFetchError) {
+            //     console.log(this.errorMessageApi);
+            // } else {
+            //     console.log(this.dataApi);
+            //     this.selectedDates.event.setProp("title", this.course);
+            //     this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
+            //     this.selectedDates.event.setExtendedProp("teacher", this.teacher);
+            // }
 
-            this.calendarApi.unselect();
+            // this.calendarApi.unselect();
+            this.selectedDates.event.setProp("title", this.course);
+            this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
+            this.selectedDates.event.setExtendedProp("teacher", this.teacher);
 
-            this.$emit("handleSubmit");
+            this.$emit("handleCloseModal");
         },
 
         async handleDelete() {
@@ -72,12 +77,12 @@ export default {
 
             if (this.isFetchError) {
                 console.log(this.errorMessageApi);
-            } else {
-                console.log(this.dataApi);
-                this.selectedDates.event.remove();
+                return;
             }
+            console.log(this.dataApi);
+            this.selectedDates.event.remove();
 
-            this.$emit("handleSubmit");
+            this.$emit("handleCloseModal");
         },
     },
 };
@@ -101,5 +106,12 @@ export default {
 
 .input-container {
     margin: 1rem 0;
+}
+
+.exit-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
 }
 </style>

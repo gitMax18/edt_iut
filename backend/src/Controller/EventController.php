@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,37 +24,70 @@ class EventController extends AbstractController
     {
         $events = $doctrine->getRepository(Event::class)->findAll();
 
-        if (empty($events)) {
-            return $this->json([
-                "error" => "No events find...",
-            ], 400);
-        }
+        // if (empty($events)) {
+        //     return $this->json([
+        //         "error" => "No events find...",
+        //     ], 400);
+        // }
 
         return $this->json([
             "events" => $events,
         ], 200);
     }
 
+
+    /**
+     * @Route("/api/event/{sector}/{formation}", name="get_eventsByFormation", methods={"GET"})
+     */
+    public function getEventByformation(ManagerRegistry $doctrine, string $sector, string $formation): JsonResponse
+    {
+        $events = $doctrine->getRepository(Event::class)->findByFormation($sector, $formation);
+
+        // if (empty($events)) {
+        //     return $this->json([
+        //         "error" => "No events find...",
+        //     ], 400);
+        // }
+
+        return $this->json([
+            "events" => $events,
+        ], 200);
+    }
+
+
     /**
      * @Route("/api/event", name="add_event", methods={"POST"})
      */
-    public function addEvent(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
+    public function addEvent(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, ManagerRegistry $doctrine)
     {
-        $json = $request->getContent();
 
+        $content = $request->toArray();
+
+        $events = $doctrine->getRepository(Event::class)->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+
+        if (!empty($events)) {
+            return $this->json([
+                "status" => "error",
+                "message" => "Ce professeur à déja cour pendant ces dates",
+                "events" => $events
+            ]);
+        }
+
+        $json = $request->getContent();
         try {
             $event = $serializer->deserialize($json, Event::class, 'json');
             $em->persist($event);
             $em->flush();
-            return $this->json([
-                "eventId" => $event->getId(),
-                "message" => "event created"
-            ], 201);
         } catch (NotEncodableValueException $e) {
             return $this->json([
                 "error" => $e->getMessage()
             ], 400);
         }
+        return $this->json([
+            "status" => "succes",
+            "eventId" => $event->getId(),
+            "message" => "event created"
+        ], 201);
     }
 
     /**
@@ -64,7 +99,7 @@ class EventController extends AbstractController
 
         if (!$event) {
             return $this->json([
-                "error" => "No event find...",
+                "message" => "No event find...",
             ], 400);
         }
 
@@ -81,18 +116,33 @@ class EventController extends AbstractController
      */
     public function updateEvent(ManagerRegistry $doctrine, EntityManagerInterface $em, Request $request, int $id): JsonResponse
     {
-        $content = $request->toArray();
-        $event = $doctrine->getRepository(Event::class)->find($id);
 
+
+        $content = $request->toArray();
+        $repository = $doctrine->getRepository(Event::class);
+
+        $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+
+        if (!empty($events)) {
+            return $this->json([
+                "status" => "error",
+                "message" => "Ce professeur à déja cour pendant ces dates",
+                "events" => $events
+            ]);
+        }
+
+        $event = $repository->find($id);
         if (!$event) {
             return $this->json([
-                "error" => "No event find...",
+                "message" => "No event find...",
             ], 400);
         }
 
         $event->setCourse($content["course"]);
         $event->setClassroom($content["classroom"]);
         $event->setTeacher($content["teacher"]);
+        $event->setStartAt(new DateTimeImmutable($content["startAt"]));
+        $event->setEndAt(new DateTimeImmutable($content["endAt"]));
 
         $em->flush();
 

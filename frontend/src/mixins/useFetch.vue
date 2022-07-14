@@ -42,15 +42,17 @@ export default {
             return {
                 id: event.id,
                 title: event.course,
+                // todo
                 start: event.startAt.slice(0, -6),
                 end: event.endAt.slice(0, -6),
                 extendedProps: {
                     classroom: event.classroom,
                     teacher: event.teacher,
+                    formation: event.formation,
+                    sector: event.sector,
                 },
             };
         },
-
         transformEventToApiEvent(event) {
             return {
                 course: event.title,
@@ -58,7 +60,12 @@ export default {
                 endAt: event.end,
                 classroom: event.extendedProps.classroom,
                 teacher: event.extendedProps.teacher,
+                formation: event.extendedProps.formation,
+                sector: event.extendedProps.sector,
             };
+        },
+        getSlug(str) {
+            return str.replace(" ", "-");
         },
     },
 };

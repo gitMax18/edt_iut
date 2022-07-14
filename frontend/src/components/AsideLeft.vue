@@ -9,7 +9,7 @@
             <div v-for="(course, index) in courses" :key="index" class="course-container">
                 <div class="course-sector" @click="course.isPlanningShow = !course.isPlanningShow">{{ course.sector }}</div>
                 <ul class="course-list" v-if="course.isPlanningShow">
-                    <li class="course-item" @click="handleClickFormation({ formation, sector: course.sector })" v-for="(formation, index) in course.formations" :key="index">
+                    <li class="course-item" v-for="(formation, index) in course.formations" @click="handleClickFormation({ formation, sector: course.sector })" :key="index">
                         {{ formation }}
                     </li>
                 </ul>
@@ -23,6 +23,7 @@
 
 <script>
 import AppButton from "./AppButton.vue";
+import { formationMMI, formationGEA } from "../etc";
 export default {
     name: "asideLeft",
     components: {
@@ -35,12 +36,12 @@ export default {
                 {
                     isShow: false,
                     sector: "MMI",
-                    formations: ["BUT 1", "BUT 2", "BUT 3", "LP MIAW", "LP CAN"],
+                    formations: formationMMI,
                 },
                 {
                     isShow: false,
                     sector: "GEA",
-                    formations: ["BUT 1", "BUT 2", "BUT 3", "LP RC", "LP CD", "LP CSP"],
+                    formations: formationGEA,
                 },
             ],
         };
@@ -56,7 +57,7 @@ export default {
             this.isPlanningShow = !this.isPlanningShow;
         },
         handleClickFormation(formationData) {
-            console.log(formationData.sector + "/" + formationData.formation);
+            this.$emit("handleSelectFormation", formationData.sector, formationData.formation);
         },
         handleClickIndisponibility() {
             console.log("indisponibility");

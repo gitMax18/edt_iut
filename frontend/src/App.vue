@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
-        <AsideLeft class="left" />
-        <Callendar class="right" />
+        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" />
+        <Callendar class="right" :formation="formation" :sector="sector" />
     </div>
 </template>
 
@@ -13,6 +13,19 @@ export default {
     components: {
         Callendar,
         AsideLeft,
+    },
+    data() {
+        return {
+            formation: "BUT 1",
+            sector: "MMI",
+        };
+    },
+    methods: {
+        handleSelectFormation(sector, formation) {
+            this.sector = sector;
+            this.formation = formation;
+            console.log(this.sector, this.formation);
+        },
     },
 };
 </script>

@@ -19,6 +19,7 @@
             </div>
             <button @click.prevent="handleSubmit">Valider</button>
         </form>
+        <button class="exit-btn" @click="$emit('handleCloseModal')">X</button>
     </div>
 </template>
 
@@ -29,10 +30,13 @@ export default {
     name: "AddEventModal",
     emits: ["handleSubmit"],
     mixins: [useFetch],
+    emits: ["handleCloseModal"],
     props: {
         selectedDates: Object,
         calendarApi: Object,
         eventData: Object,
+        formation: String,
+        sector: String,
     },
     data() {
         return {
@@ -44,6 +48,10 @@ export default {
     },
     methods: {
         async handleSubmit() {
+            if (!this.formation || !this.sector) {
+                console.log("Veuillez choisir une formation");
+                return;
+            }
             const newEvent = {
                 title: this.course,
                 start: this.selectedDates.startStr,
@@ -51,19 +59,25 @@ export default {
                 extendedProps: {
                     classroom: this.choosenClassroom,
                     teacher: this.teacher,
+                    formation: this.formation,
+                    sector: this.sector,
                 },
             };
-
             await this.fetchApi("event", "POST", this.transformEventToApiEvent(newEvent));
 
             if (this.isFetchError) {
                 console.log(this.errorMessageApi);
-            } else {
-                this.calendarApi.addEvent({ ...newEvent, id: this.dataApi.eventId });
+                return;
             }
 
+            if (this.dataApi.status === "error") {
+                console.log(this.dataApi.message);
+                return;
+            }
+            this.calendarApi.addEvent({ ...newEvent, id: this.dataApi.eventId }, true);
+
             this.calendarApi.unselect();
-            this.$emit("handleSubmit");
+            this.$emit("handleCloseModal");
         },
     },
     mounted() {
@@ -90,5 +104,12 @@ export default {
 
 .input-container {
     margin: 1rem 0;
+}
+
+.exit-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
 }
 </style>

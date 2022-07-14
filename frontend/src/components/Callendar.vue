@@ -1,8 +1,15 @@
 <template>
-    <div>
+    <div class="calendar-container">
         <FullCalendar :options="calendarOptions" ref="calendar" />
-        <AddEventModal v-if="isCreateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleSubmit="handleSubmitCreateModal" />
-        <UpdateEventModal v-if="isUpdateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleSubmit="handleSubmitUpdateModal" />
+        <AddEventModal
+            v-if="isCreateModalShow"
+            :formation="formation"
+            :sector="sector"
+            :selectedDates="selectedDates"
+            :calendarApi="calendarApi"
+            @handleCloseModal="handleCloseCreateModal"
+        />
+        <UpdateEventModal v-if="isUpdateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleCloseModal="handleCloseUpdateModal" />
     </div>
 </template>
 
@@ -22,6 +29,18 @@ export default {
         FullCalendar,
         AddEventModal,
         UpdateEventModal,
+    },
+    props: {
+        formation: String,
+        sector: String,
+    },
+    watch: {
+        formation() {
+            this.fetchEventByFormation();
+        },
+        sector() {
+            this.fetchEventByFormation();
+        },
     },
     data() {
         return {
@@ -68,9 +87,30 @@ export default {
             this.isUpdateModalShow = true;
         },
         handleEvents() {},
-        handleAddEvent() {},
-        handleChangeEvent(event) {
-            console.log("changeEvent", event);
+        handleAddEvent() {
+            console.log(this.calendarOptions.events);
+        },
+        async handleChangeEvent(dataEvent) {
+            await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
+                course: dataEvent.event.title,
+                teacher: dataEvent.event.extendedProps.teacher,
+                classroom: dataEvent.event.extendedProps.classroom,
+                startAt: dataEvent.event.startStr,
+                endAt: dataEvent.event.endStr,
+                sector: dataEvent.event.extendedProps.sector,
+                formation: dataEvent.event.extendedProps.formation,
+            });
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+                dataEvent.revert();
+                return;
+            }
+            if (this.dataApi.status === "error") {
+                dataEvent.revert();
+            }
+
+            console.log(this.dataApi.message);
         },
         handleRemoveEvent() {},
         toggleShowWeekend() {
@@ -84,11 +124,20 @@ export default {
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
         },
-        handleSubmitCreateModal() {
+        handleCloseCreateModal() {
             this.isCreateModalShow = false;
         },
-        handleSubmitUpdateModal() {
+        handleCloseUpdateModal() {
             this.isUpdateModalShow = false;
+        },
+        async fetchEventByFormation() {
+            await this.fetchApi(`event/${this.getSlug(this.sector)}/${this.getSlug(this.formation)}`);
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+                return;
+            }
+            this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
         },
     },
     async mounted() {
@@ -98,11 +147,15 @@ export default {
 
         if (this.isFetchError) {
             console.log(this.errorMessageApi);
-        } else {
-            this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
+            return;
         }
+        this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
     },
 };
 </script>
 
-<style lang="css" scoped></style>
+<style lang="scss" scoped>
+.calendar-container {
+    padding: 1rem;
+}
+</style>

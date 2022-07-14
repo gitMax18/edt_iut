@@ -29,6 +29,12 @@ class Event
     #[ORM\Column(type: 'string', length: 255)]
     private $course;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $formation;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $sector;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +96,30 @@ class Event
     public function setCourse(string $course): self
     {
         $this->course = $course;
+
+        return $this;
+    }
+
+    public function getFormation(): ?string
+    {
+        return $this->formation;
+    }
+
+    public function setFormation(string $formation): self
+    {
+        $this->formation = $formation;
+
+        return $this;
+    }
+
+    public function getSector(): ?string
+    {
+        return $this->sector;
+    }
+
+    public function setSector(string $sector): self
+    {
+        $this->sector = $sector;
 
         return $this;
     }
