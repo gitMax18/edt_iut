@@ -64,9 +64,9 @@ class EventRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT e
              FROM App\Entity\Event e 
-             WHERE e.teacher = :teacher 
-             AND ((e.start_at > :start AND e.start_at < :end) 
-             OR (e.end_at > :start AND e.end_at < :end))
+             WHERE e.teacher = :teacher
+             AND ((e.start_at >= :start AND e.start_at <= :end) 
+             OR (e.end_at >= :start AND e.end_at <= :end))
             '
         )->setParameters(['teacher' => $teacher, 'start' => $start, 'end' => $end]);
 

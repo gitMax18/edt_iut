@@ -116,12 +116,15 @@ class EventController extends AbstractController
      */
     public function updateEvent(ManagerRegistry $doctrine, EntityManagerInterface $em, Request $request, int $id): JsonResponse
     {
-
-
         $content = $request->toArray();
         $repository = $doctrine->getRepository(Event::class);
 
         $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+
+        $events = array_filter($events, function ($val) use ($id) {
+            return $val->getId() != $id;
+        });
+
 
         if (!empty($events)) {
             return $this->json([
