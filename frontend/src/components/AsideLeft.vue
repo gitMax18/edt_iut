@@ -6,11 +6,11 @@
         </div>
         <div class="aside-item" @click="handleClickPlanning">Emplois du temps</div>
         <template v-if="isPlanningShow">
-            <div v-for="(course, index) in courses" :key="index" class="course-container">
-                <div class="course-sector" @click="course.isPlanningShow = !course.isPlanningShow">{{ course.sector }}</div>
-                <ul class="course-list" v-if="course.isPlanningShow">
-                    <li class="course-item" v-for="(formation, index) in course.formations" @click="handleClickFormation({ formation, sector: course.sector })" :key="index">
-                        {{ formation }}
+            <div v-for="(value, key) in formations" :key="key" class="course-container">
+                <div class="course-sector" @click="handleShowSector(key)">{{ key }}</div>
+                <ul class="course-list" v-if="value.isShow">
+                    <li class="course-item" v-for="(formation, index) in value.formations" @click="handleClickFormation(formation)" :key="index">
+                        {{ formation.name }}
                     </li>
                 </ul>
             </div>
@@ -24,26 +24,35 @@
 <script>
 import AppButton from "./AppButton.vue";
 import { formationMMI, formationGEA } from "../etc";
+import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
+    mixins: [useFetch],
+    emits: ["handleSelectFormation"],
+    props: {
+        formations: {
+            type: Object,
+        },
+    },
     components: {
         AppButton,
     },
     data() {
         return {
             isPlanningShow: false,
-            courses: [
-                {
-                    isShow: false,
-                    sector: "MMI",
-                    formations: formationMMI,
-                },
-                {
-                    isShow: false,
-                    sector: "GEA",
-                    formations: formationGEA,
-                },
-            ],
+            // courses: [
+            //     {
+            //         isShow: false,
+            //         sector: "MMI",
+            //         formations: formationMMI,
+            //     },
+            //     {
+            //         isShow: false,
+            //         sector: "GEA",
+            //         formations: formationGEA,
+            //     },
+            // ],
+            // formations: {},
         };
     },
     methods: {
@@ -56,8 +65,8 @@ export default {
         handleClickPlanning() {
             this.isPlanningShow = !this.isPlanningShow;
         },
-        handleClickFormation(formationData) {
-            this.$emit("handleSelectFormation", formationData.sector, formationData.formation);
+        handleClickFormation(formation) {
+            this.$emit("handleSelectFormation", formation);
         },
         handleClickIndisponibility() {
             console.log("indisponibility");
@@ -68,7 +77,29 @@ export default {
         handleClickReporting() {
             console.log("reporting");
         },
+        handleShowSector(formationKey) {
+            this.formations[formationKey].isShow = !this.formations[formationKey].isShow;
+        },
+        formatFormations(formationsArray) {
+            formationsArray.forEach((formation) => {
+                if (!this.formations.hasOwnProperty(formation.sector)) {
+                    this.formations[formation.sector] = {
+                        isShow: false,
+                        formations: [],
+                    };
+                }
+                this.formations[formation.sector].formations.push(formation);
+            });
+        },
     },
+    // async mounted() {
+    //     await this.fetchApi("formation");
+    //     if (this.isFetchError) {
+    //         console.log(this.errorMessageApi);
+    //         return;
+    //     }
+    //     this.formatFormations(this.dataApi.formations);
+    // },
 };
 </script>
 

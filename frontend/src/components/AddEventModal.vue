@@ -3,8 +3,13 @@
         <h2 class="title">Entrer les données du cour</h2>
         <form>
             <div class="input-container">
-                <label for="course">Cour: </label>
-                <input type="text" id="course" v-model="course" />
+                <label for="course">cour : </label>
+                <select name="course" id="course" v-model="course">
+                    <option value="">Choisissez un type de cour</option>
+                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
+                </select>
+                <!-- <label for="course">Cour: </label>
+                <input type="text" id="course" v-model="course" /> -->
             </div>
             <div class="input-container">
                 <label for="classroomType">Type salle: </label>
@@ -13,9 +18,11 @@
                     <option v-for="type in classroomTypes" :key="type" :value="type">{{ type }}</option>
                 </select>
             </div>
-            <div class="input-container">
-                <label for="teacher">Professeur: </label>
-                <input type="text" id="teacher" v-model="teacher" />
+            <div class="input-container" v-if="course">
+                <select name="teacher" id="teacher" v-model="teacher">
+                    <option value="">Choisissez un professeur</option>
+                    <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
+                </select>
             </div>
             <button @click.prevent="handleSubmit">Valider</button>
         </form>
@@ -35,32 +42,29 @@ export default {
         selectedDates: Object,
         calendarApi: Object,
         eventData: Object,
-        formation: String,
-        sector: String,
+        formation: Object,
+        formationCourses: Array,
     },
+
     data() {
         return {
-            course: "",
-            teacher: "",
+            course: {},
+            teacher: {},
             classroomTypes: classroomType,
             choosenClassroom: "",
         };
     },
     methods: {
         async handleSubmit() {
-            if (!this.formation || !this.sector) {
-                console.log("Veuillez choisir une formation");
-                return;
-            }
             const newEvent = {
-                title: this.course,
+                title: this.course.name,
                 start: this.selectedDates.startStr,
                 end: this.selectedDates.endStr,
                 extendedProps: {
                     classroom: this.choosenClassroom,
                     teacher: this.teacher,
                     formation: this.formation,
-                    sector: this.sector,
+                    course: this.course,
                 },
             };
             await this.fetchApi("event", "POST", this.transformEventToApiEvent(newEvent));
@@ -74,6 +78,7 @@ export default {
                 console.log(this.dataApi.message);
                 return;
             }
+
             this.calendarApi.addEvent({ ...newEvent, id: this.dataApi.eventId }, true);
 
             this.calendarApi.unselect();
@@ -81,7 +86,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.selectedDates);
+        // console.log(this.selectedDates);
     },
 };
 </script>

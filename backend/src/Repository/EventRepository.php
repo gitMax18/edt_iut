@@ -41,34 +41,49 @@ class EventRepository extends ServiceEntityRepository
     }
 
 
-    public function findByFormation(string $sector, string $formation): array
+    public function findAllJoinByTeacherAndCourse(): array
     {
         $em = $this->getEntityManager();
-        $sector = str_replace("-", " ", $sector);
-        $formation = str_replace("-", " ", $formation);
 
         $query = $em->createQuery(
-            'SELECT e
-             FROM App\Entity\Event e 
-             WHERE e.sector = :sector AND e.formation = :formation
-            '
-        )->setParameters(['sector' => $sector, 'formation' => $formation]);
+            'SELECT e, t.firstname as teacher, c.name as course
+            FROM App\Entity\Event e
+            INNER JOIN e.teacher t
+            INNER JOIN e.course c'
+        );
 
         return $query->getResult();
     }
 
-    public function findByTeacherAndDates(string $teacher, DateTime $start, DateTime $end): array
+
+    public function findAllByFormation(int $formationId): array
     {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery(
             'SELECT e
              FROM App\Entity\Event e 
-             WHERE e.teacher = :teacher
-             AND ((e.start_at >= :start AND e.start_at <= :end) 
-             OR (e.end_at >= :start AND e.end_at <= :end))
+             WHERE e.formation = :formationId
             '
-        )->setParameters(['teacher' => $teacher, 'start' => $start, 'end' => $end]);
+        )->setParameters(['formationId' => $formationId]);
+
+        return $query->getResult();
+    }
+
+    public function findByTeacherAndDates(string $teacherId, DateTime $start, DateTime $end): array
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT e,t.firstname as teacher,c.name as course
+             FROM App\Entity\Event e 
+             INNER JOIN e.teacher t
+             INNER JOIN e.course c
+             WHERE t.id = :teacherId
+             AND ((e.startAt >= :start AND e.startAt <= :end) 
+             OR (e.endAt >= :start AND e.endAt <= :end))
+            '
+        )->setParameters(['teacherId' => $teacherId, 'start' => $start, 'end' => $end]);
 
         return $query->getResult();
     }

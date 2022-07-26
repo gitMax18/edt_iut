@@ -3,8 +3,11 @@
         <h2 class="title">Modifier les données du cour</h2>
         <form>
             <div class="input-container">
-                <label for="course">Cour: </label>
-                <input type="text" id="course" v-model="course" />
+                <label for="course">cour : </label>
+                <select name="course" id="course" v-model="course">
+                    <option :value="course">{{ course.name }}</option>
+                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
+                </select>
             </div>
             <div class="input-container">
                 <label for="classroomType">Type salle: </label>
@@ -13,12 +16,14 @@
                     <option v-for="type in classroomTypes" :key="type" :value="type">{{ type }}</option>
                 </select>
             </div>
-            <div class="input-container">
-                <label for="teacher">Professeur: </label>
-                <input type="text" id="teacher" v-model="teacher" />
+            <div class="input-container" v-if="course">
+                <select name="teacher" id="teacher" v-model="teacher">
+                    <option :value="teacher">{{ teacher.firstname }}</option>
+                    <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
+                </select>
             </div>
-            <button @click.prevent="handleUpdate">Valider</button>
-            <button @click.prevent="handleDelete">Supprimer</button>
+            <button @click.prevent="handleUpdate">Update</button>
+            <button @click.prevent="handleDelete">Delete</button>
         </form>
         <button class="exit-btn" @click="$emit('handleCloseModal')">X</button>
     </div>
@@ -34,10 +39,11 @@ export default {
     props: {
         selectedDates: Object,
         calendarApi: Object,
+        formationCourses: Object,
     },
     data() {
         return {
-            course: this.selectedDates.event.title,
+            course: this.selectedDates.event.extendedProps.course,
             teacher: this.selectedDates.event.extendedProps.teacher,
             choosenClassroom: this.selectedDates.event.extendedProps.classroom,
             classroomTypes: classroomType,
@@ -45,41 +51,21 @@ export default {
     },
     methods: {
         async handleUpdate() {
-            // await this.fetchApi(`event/${this.selectedDates.event.id}`, "PUT", {
-            //     course: this.course,
-            //     teacher: this.teacher,
-            //     classroom: this.choosenClassroom,
-            //     startAt: this.selectedDates.event.start,
-            //     endAt: this.selectedDates.event.end,
-            // });
-
-            // if (this.isFetchError) {
-            //     console.log(this.errorMessageApi);
-            // } else {
-            //     console.log(this.dataApi);
-            //     this.selectedDates.event.setProp("title", this.course);
-            //     this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
-            //     this.selectedDates.event.setExtendedProp("teacher", this.teacher);
-            // }
-
-            // this.calendarApi.unselect();
-            this.selectedDates.event.setProp("title", this.course);
+            this.selectedDates.event.setProp("title", this.course.name);
             this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
             this.selectedDates.event.setExtendedProp("teacher", this.teacher);
+            this.selectedDates.event.setExtendedProp("course", this.course);
 
             this.$emit("handleCloseModal");
         },
 
         async handleDelete() {
-            console.log(this.selectedDates.event.id);
-
             await this.fetchApi(`event/${this.selectedDates.event.id}`, "DELETE");
 
             if (this.isFetchError) {
                 console.log(this.errorMessageApi);
                 return;
             }
-            console.log(this.dataApi);
             this.selectedDates.event.remove();
 
             this.$emit("handleCloseModal");

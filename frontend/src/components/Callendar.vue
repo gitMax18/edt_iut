@@ -3,13 +3,20 @@
         <FullCalendar :options="calendarOptions" ref="calendar" />
         <AddEventModal
             v-if="isCreateModalShow"
+            :formationCourses="formationCourses"
             :formation="formation"
-            :sector="sector"
             :selectedDates="selectedDates"
             :calendarApi="calendarApi"
             @handleCloseModal="handleCloseCreateModal"
         />
-        <UpdateEventModal v-if="isUpdateModalShow" :selectedDates="selectedDates" :calendarApi="calendarApi" @handleCloseModal="handleCloseUpdateModal" />
+        <UpdateEventModal
+            v-if="isUpdateModalShow"
+            :formationCourses="formationCourses"
+            :selectedDates="selectedDates"
+            :calendarApi="calendarApi"
+            @handleCloseModal="handleCloseUpdateModal"
+        />
+        <Loader v-if="isLoadingApi" />
     </div>
 </template>
 
@@ -22,6 +29,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import AddEventModal from "./AddEventModal.vue";
 import UpdateEventModal from "./UpdateEventModal.vue";
 import useFetch from "../mixins/useFetch.vue";
+import Loader from "./Loader.vue";
 export default {
     name: "Calendar",
     mixins: [useFetch],
@@ -29,17 +37,18 @@ export default {
         FullCalendar,
         AddEventModal,
         UpdateEventModal,
+        Loader,
     },
     props: {
-        formation: String,
-        sector: String,
+        formation: Object,
     },
     watch: {
-        formation() {
-            this.fetchEventByFormation();
-        },
-        sector() {
-            this.fetchEventByFormation();
+        formation: {
+            handler() {
+                this.fetchEventByFormation();
+                this.fetchCourseByFormation();
+            },
+            immediate: true,
         },
     },
     data() {
@@ -75,6 +84,7 @@ export default {
             isCreateModalShow: false,
             isUpdateModalShow: false,
             selectedDates: null,
+            formationCourses: [],
         };
     },
     methods: {
@@ -87,18 +97,15 @@ export default {
             this.isUpdateModalShow = true;
         },
         handleEvents() {},
-        handleAddEvent() {
-            console.log(this.calendarOptions.events);
-        },
+        handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
+            console.log("update : ", dataEvent.event);
             await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
-                course: dataEvent.event.title,
-                teacher: dataEvent.event.extendedProps.teacher,
+                course: dataEvent.event.extendedProps.course.id,
+                teacher: dataEvent.event.extendedProps.teacher.id,
                 classroom: dataEvent.event.extendedProps.classroom,
                 startAt: dataEvent.event.startStr,
                 endAt: dataEvent.event.endStr,
-                sector: dataEvent.event.extendedProps.sector,
-                formation: dataEvent.event.extendedProps.formation,
             });
 
             if (this.isFetchError) {
@@ -120,7 +127,7 @@ export default {
             const textTime = document.createElement("p");
             textTime.innerHTML = `${args.timeText}`;
             const textContent = document.createElement("p");
-            textContent.innerHTML = `${args.event.title} / ${args.event.extendedProps.classroom} / ${args.event.extendedProps.teacher}`;
+            textContent.innerHTML = `${args.event.title} / ${args.event.extendedProps.classroom} / ${args.event.extendedProps.teacher.firstname}`;
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
         },
@@ -130,8 +137,20 @@ export default {
         handleCloseUpdateModal() {
             this.isUpdateModalShow = false;
         },
+        async fetchCourseByFormation() {
+            if (!this.formation) return;
+
+            await this.fetchApi(`course/${this.formation.id}`);
+
+            if (this.isFetchError) {
+                console.log(this.errorMessageApi);
+                return;
+            }
+            this.formationCourses = this.dataApi.courses;
+        },
         async fetchEventByFormation() {
-            await this.fetchApi(`event/${this.getSlug(this.sector)}/${this.getSlug(this.formation)}`);
+            if (!this.formation) return;
+            await this.fetchApi(`event/${this.formation.id}`);
 
             if (this.isFetchError) {
                 console.log(this.errorMessageApi);
@@ -142,14 +161,12 @@ export default {
     },
     async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
-
-        await this.fetchApi("event");
-
-        if (this.isFetchError) {
-            console.log(this.errorMessageApi);
-            return;
-        }
-        this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
+        // await this.fetchApi("event");
+        // if (this.isFetchError) {
+        //     console.log(this.errorMessageApi);
+        //     return;
+        // }
+        // this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
     },
 };
 </script>

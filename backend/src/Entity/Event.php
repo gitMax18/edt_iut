@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\EventRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EventRepository;
 use Symfony\Component\Validator\Contraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -12,66 +14,72 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /** 
+     * @Groups({"event:read"})
+     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $teacher;
+    #[ORM\Column(type: 'datetime_immutable')]
+    /** 
+     * @Groups({"event:read"})
+     */
+    private $startAt;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private $start_at;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private $end_at;
+    /** 
+     * @Groups({"event:read"})
+     */
+    private $endAt;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /** 
+     * @Groups({"event:read"})
+     */
     private $classroom;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'events')]
+    /** 
+     * @Groups({"event:read"})
+     */
+    private $teacher;
+
+    #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'events')]
+    /** 
+     * @Groups({"event:read"})
+     */
     private $course;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'events')]
+    /** 
+     * @Groups({"event:read"})
+     */
     private $formation;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $sector;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTeacher(): ?string
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(string $teacher): self
-    {
-        $this->teacher = $teacher;
-
-        return $this;
-    }
-
     public function getStartAt(): ?\DateTimeImmutable
     {
-        return $this->start_at;
+        return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeImmutable $start_at): self
+    public function setStartAt(\DateTimeImmutable $startAt): self
     {
-        $this->start_at = $start_at;
+        $this->startAt = $startAt;
 
         return $this;
     }
 
     public function getEndAt(): ?\DateTimeImmutable
     {
-        return $this->end_at;
+        return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeImmutable $end_at): self
+    public function setEndAt(\DateTimeImmutable $endAt): self
     {
-        $this->end_at = $end_at;
+        $this->endAt = $endAt;
 
         return $this;
     }
@@ -88,38 +96,38 @@ class Event
         return $this;
     }
 
-    public function getCourse(): ?string
+    public function getTeacher(): ?User
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(?User $teacher): self
+    {
+        $this->teacher = $teacher;
+
+        return $this;
+    }
+
+    public function getCourse(): ?Course
     {
         return $this->course;
     }
 
-    public function setCourse(string $course): self
+    public function setCourse(?Course $course): self
     {
         $this->course = $course;
 
         return $this;
     }
 
-    public function getFormation(): ?string
+    public function getFormation(): ?Formation
     {
         return $this->formation;
     }
 
-    public function setFormation(string $formation): self
+    public function setFormation(?Formation $formation): self
     {
         $this->formation = $formation;
-
-        return $this;
-    }
-
-    public function getSector(): ?string
-    {
-        return $this->sector;
-    }
-
-    public function setSector(string $sector): self
-    {
-        $this->sector = $sector;
 
         return $this;
     }

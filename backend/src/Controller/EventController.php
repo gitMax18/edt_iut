@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Event;
 use DateTime;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Course;
 use DateTimeImmutable;
+use App\Entity\Formation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +25,7 @@ class EventController extends AbstractController
      */
     public function getAll(ManagerRegistry $doctrine): JsonResponse
     {
-        $events = $doctrine->getRepository(Event::class)->findAll();
+        $events = $doctrine->getRepository(Event::class)->findAllJoinByTeacherAndCourse();
 
         // if (empty($events)) {
         //     return $this->json([
@@ -32,16 +35,16 @@ class EventController extends AbstractController
 
         return $this->json([
             "events" => $events,
-        ], 200);
+        ], 200, [], ["groups" => "event:read"]);
     }
 
 
     /**
-     * @Route("/api/event/{sector}/{formation}", name="get_eventsByFormation", methods={"GET"})
+     * @Route("/api/event/{formationId}",requirements={"formationId"="\d+"} ,name="get_eventsByFormation", methods={"GET"})
      */
-    public function getEventByformation(ManagerRegistry $doctrine, string $sector, string $formation): JsonResponse
+    public function getEventByformation(ManagerRegistry $doctrine, int $formationId): JsonResponse
     {
-        $events = $doctrine->getRepository(Event::class)->findByFormation($sector, $formation);
+        $events = $doctrine->getRepository(Event::class)->findAllByFormation($formationId);
 
         // if (empty($events)) {
         //     return $this->json([
@@ -51,7 +54,7 @@ class EventController extends AbstractController
 
         return $this->json([
             "events" => $events,
-        ], 200);
+        ], 200, [], ["groups" => "event:read"]);
     }
 
 
@@ -74,8 +77,17 @@ class EventController extends AbstractController
         }
 
         $json = $request->getContent();
+
+        $course = $doctrine->getRepository(Course::class)->find($content["course"]);
+        $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
+        $formation = $doctrine->getRepository(Formation::class)->find($content["formation"]);
+
         try {
-            $event = $serializer->deserialize($json, Event::class, 'json');
+            $event = $serializer->deserialize($json, Event::class, 'json', ['groups' => 'event:read']);
+            $event->setCourse($course)
+                ->setTeacher($teacher)
+                ->setFormation($formation);
+
             $em->persist($event);
             $em->flush();
         } catch (NotEncodableValueException $e) {
@@ -119,34 +131,33 @@ class EventController extends AbstractController
         $content = $request->toArray();
         $repository = $doctrine->getRepository(Event::class);
 
-        $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
-
-        $events = array_filter($events, function ($val) use ($id) {
-            return $val->getId() != $id;
-        });
-
-
-        if (!empty($events)) {
-            return $this->json([
-                "status" => "error",
-                "message" => "Ce professeur à déja cour pendant ces dates",
-                "events" => $events
-            ]);
-        }
-
         $event = $repository->find($id);
         if (!$event) {
             return $this->json([
                 "message" => "No event find...",
             ], 400);
         }
+        $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+        $events = array_filter($events, function ($val) use ($id) {
+            return $val[0]->getId() != $id;
+        });
 
-        $event->setCourse($content["course"]);
+        if (!empty($events)) {
+            return $this->json([
+                "status" => "error",
+                "message" => "Ce professeur à déja cour pendant ces dates",
+                "events" => $events
+            ], 200, [], ["groups" => "event:read"]);
+        }
+
+        $course = $doctrine->getRepository(Course::class)->find($content["course"]);
+        $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
+
+        $event->setCourse($course);
+        $event->setTeacher($teacher);
         $event->setClassroom($content["classroom"]);
-        $event->setTeacher($content["teacher"]);
         $event->setStartAt(new DateTimeImmutable($content["startAt"]));
         $event->setEndAt(new DateTimeImmutable($content["endAt"]));
-
         $em->flush();
 
         return $this->json([

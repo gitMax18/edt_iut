@@ -31,6 +31,7 @@ export default {
                     throw new Error(response.statusText);
                 }
                 this.dataApi = await response.json();
+                // console.log("api : ", this.dataApi);
             } catch (error) {
                 this.errorMessageApi = error.message;
             } finally {
@@ -39,31 +40,36 @@ export default {
         },
 
         transformApiEventToEvent(event) {
+            // console.log("event ", event);
             return {
                 id: event.id,
-                title: event.course,
+                title: event.course.name,
                 // todo
                 start: event.startAt.slice(0, -6),
                 end: event.endAt.slice(0, -6),
+                backgroundColor: "lightblue",
+                borderColor: "green",
+                textColor: "black",
                 extendedProps: {
                     classroom: event.classroom,
                     teacher: event.teacher,
                     formation: event.formation,
-                    sector: event.sector,
+                    course: event.course,
                 },
             };
         },
         transformEventToApiEvent(event) {
+            // console.log("apiEvent", event);
             return {
-                course: event.title,
+                course: event.extendedProps.course.id,
                 startAt: event.start,
                 endAt: event.end,
                 classroom: event.extendedProps.classroom,
-                teacher: event.extendedProps.teacher,
-                formation: event.extendedProps.formation,
-                sector: event.extendedProps.sector,
+                teacher: event.extendedProps.teacher.id,
+                formation: event.extendedProps.formation.id,
             };
         },
+
         getSlug(str) {
             return str.replace(" ", "-");
         },

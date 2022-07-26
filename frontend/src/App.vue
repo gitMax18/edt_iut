@@ -1,31 +1,54 @@
 <template>
     <div class="main-container">
-        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" />
-        <Callendar class="right" :formation="formation" :sector="sector" />
+        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" :formations="formations" />
+        <Callendar class="right" :formation="formation" v-if="formation" />
+        <Loader v-if="isLoadingApi" />
     </div>
 </template>
 
 <script>
 import Callendar from "./components/Callendar.vue";
 import AsideLeft from "./components/AsideLeft.vue";
+import useFetch from "./mixins/useFetch.vue";
+import Loader from "./components/Loader.vue";
 export default {
     name: "App",
+    mixins: [useFetch],
     components: {
         Callendar,
         AsideLeft,
+        Loader,
     },
     data() {
         return {
-            formation: "BUT 1",
-            sector: "MMI",
+            formations: {},
+            formation: null,
         };
     },
     methods: {
-        handleSelectFormation(sector, formation) {
-            this.sector = sector;
+        handleSelectFormation(formation) {
             this.formation = formation;
-            console.log(this.sector, this.formation);
         },
+        formatFormations(formationsArray) {
+            formationsArray.forEach((formation) => {
+                if (!this.formations.hasOwnProperty(formation.sector)) {
+                    this.formations[formation.sector] = {
+                        isShow: false,
+                        formations: [],
+                    };
+                }
+                this.formations[formation.sector].formations.push(formation);
+            });
+        },
+    },
+    async mounted() {
+        await this.fetchApi("formation");
+        if (this.isFetchError) {
+            console.log(this.errorMessageApi);
+            return;
+        }
+        // console.log(this.dataApi);
+        this.formatFormations(this.dataApi.formations);
     },
 };
 </script>
@@ -50,6 +73,7 @@ body {
 
 .left {
     width: 20%;
+    border-right: 2px solid black;
 }
 .right {
     width: 80%;
