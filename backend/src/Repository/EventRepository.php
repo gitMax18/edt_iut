@@ -40,7 +40,6 @@ class EventRepository extends ServiceEntityRepository
         }
     }
 
-
     public function findAllJoinByTeacherAndCourse(): array
     {
         $em = $this->getEntityManager();
@@ -61,8 +60,9 @@ class EventRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         $query = $em->createQuery(
-            'SELECT e
-             FROM App\Entity\Event e 
+            'SELECT e, c.textColor, c.backgroundColor, c.borderColor
+             FROM App\Entity\Event e
+             INNER JOIN e.course c
              WHERE e.formation = :formationId
             '
         )->setParameters(['formationId' => $formationId]);

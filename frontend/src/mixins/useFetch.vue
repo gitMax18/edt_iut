@@ -43,18 +43,17 @@ export default {
             // console.log("event ", event);
             return {
                 id: event.id,
-                title: event.course.name,
-                // todo
-                start: event.startAt.slice(0, -6),
-                end: event.endAt.slice(0, -6),
-                backgroundColor: "lightblue",
-                borderColor: "green",
-                textColor: "black",
+                title: event[0].course.name,
+                start: event[0].startAt.slice(0, -6),
+                end: event[0].endAt.slice(0, -6),
+                backgroundColor: event.backgroundColor,
+                borderColor: event.borderColor,
+                textColor: event.textColor,
                 extendedProps: {
-                    classroom: event.classroom,
-                    teacher: event.teacher,
-                    formation: event.formation,
-                    course: event.course,
+                    classroom: event[0].classroom,
+                    teacher: event[0].teacher,
+                    formation: event[0].formation,
+                    course: event[0].course,
                 },
             };
         },
@@ -69,7 +68,6 @@ export default {
                 formation: event.extendedProps.formation.id,
             };
         },
-
         getSlug(str) {
             return str.replace(" ", "-");
         },

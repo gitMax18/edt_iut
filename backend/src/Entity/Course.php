@@ -43,6 +43,15 @@ class Course
     #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'courses')]
     private $formation;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $backgroundColor;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $borderColor;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $textColor;
+
     public function __construct()
     {
         $this->teachers = new ArrayCollection();
@@ -140,6 +149,42 @@ class Course
     public function setFormation(?Formation $formation): self
     {
         $this->formation = $formation;
+
+        return $this;
+    }
+
+    public function getBackgroundColor(): ?string
+    {
+        return $this->backgroundColor;
+    }
+
+    public function setBackgroundColor(?string $backgroundColor): self
+    {
+        $this->backgroundColor = $backgroundColor;
+
+        return $this;
+    }
+
+    public function getBorderColor(): ?string
+    {
+        return $this->borderColor;
+    }
+
+    public function setBorderColor(?string $borderColor): self
+    {
+        $this->borderColor = $borderColor;
+
+        return $this;
+    }
+
+    public function getTextColor(): ?string
+    {
+        return $this->textColor;
+    }
+
+    public function setTextColor(?string $textColor): self
+    {
+        $this->textColor = $textColor;
 
         return $this;
     }
