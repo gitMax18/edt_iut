@@ -14,7 +14,8 @@
     "@fullcalendar/vue3": "^5.11.1",
     "axios": "^0.27.2",
     "uuid": "^8.3.2",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "vue-router": "^4.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
