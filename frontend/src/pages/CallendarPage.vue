@@ -47,7 +47,6 @@ export default {
             console.log(this.errorMessageApi);
             return;
         }
-        // console.log(this.dataApi);
         this.formatFormations(this.dataApi.formations);
     },
 };

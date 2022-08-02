@@ -99,7 +99,7 @@ export default {
         handleEvents() {},
         handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
-            console.log("update : ", dataEvent.event);
+            console.log("update : ", dataEvent.oldEvent);
             await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
                 course: dataEvent.event.extendedProps.course.id,
                 teacher: dataEvent.event.extendedProps.teacher.id,
@@ -156,18 +156,12 @@ export default {
                 console.log(this.errorMessageApi);
                 return;
             }
-            console.log(this.dataApi);
             this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
+            console.log("data : ", this.calendarOptions.events);
         },
     },
     async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
-        // await this.fetchApi("event");
-        // if (this.isFetchError) {
-        //     console.log(this.errorMessageApi);
-        //     return;
-        // }
-        // this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
     },
 };
 </script>

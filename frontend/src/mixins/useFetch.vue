@@ -31,7 +31,6 @@ export default {
                     throw new Error(response.statusText);
                 }
                 this.dataApi = await response.json();
-                // console.log("api : ", this.dataApi);
             } catch (error) {
                 this.errorMessageApi = error.message;
             } finally {
@@ -42,7 +41,7 @@ export default {
         transformApiEventToEvent(event) {
             // console.log("event ", event);
             return {
-                id: event.id,
+                id: event[0].id,
                 title: event[0].course.name,
                 start: event[0].startAt.slice(0, -6),
                 end: event[0].endAt.slice(0, -6),
