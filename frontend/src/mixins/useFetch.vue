@@ -26,9 +26,8 @@ export default {
                     },
                     body: body ? JSON.stringify(body) : null,
                 });
-
                 if (!response.ok) {
-                    throw new Error(response.statusText);
+                    throw new Error(response.message);
                 }
                 this.dataApi = await response.json();
             } catch (error) {

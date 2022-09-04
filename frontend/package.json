@@ -15,7 +15,9 @@
     "axios": "^0.27.2",
     "uuid": "^8.3.2",
     "vue": "^3.2.25",
-    "vue-router": "^4.1.2"
+    "vue-router": "^4.1.2",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue-toastify": "^1.8.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",

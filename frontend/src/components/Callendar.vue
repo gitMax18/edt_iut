@@ -66,7 +66,6 @@ export default {
                 weekends: false,
                 timeZone: "local",
                 locales: "fr",
-                // selectMirror: true,
                 allDaySlot: false,
                 slotMinTime: "06:00:00",
                 slotMaxTime: "19:00:00",

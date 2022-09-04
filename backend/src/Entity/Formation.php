@@ -32,7 +32,7 @@ class Formation
      */
     private $sector;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'integer', length: 255)]
     /** 
      * @Groups({"formation:read"})
      */
@@ -43,6 +43,9 @@ class Formation
 
     #[ORM\OneToMany(mappedBy: 'formation', targetEntity: Event::class)]
     private $events;
+
+    #[ORM\OneToOne(inversedBy: 'formation', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $responsable;
 
     public function __construct()
     {
@@ -79,12 +82,12 @@ class Formation
         return $this;
     }
 
-    public function getYear(): ?string
+    public function getYear(): ?int
     {
         return $this->year;
     }
 
-    public function setYear(string $year): self
+    public function setYear(int $year): self
     {
         $this->year = $year;
 
@@ -147,6 +150,18 @@ class Formation
                 $event->setFormation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResponsable(): ?User
+    {
+        return $this->responsable;
+    }
+
+    public function setResponsable(?User $responsable): self
+    {
+        $this->responsable = $responsable;
 
         return $this;
     }

@@ -8,4 +8,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+:root {
+    font-size: 62.5%;
+}
+body {
+    font-size: 1.6rem;
+}
+*,
+::before,
+::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+</style>

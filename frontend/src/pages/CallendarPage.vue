@@ -1,7 +1,16 @@
 <template>
     <div class="main-container">
-        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" :formations="formations" />
-        <Callendar class="right" :formation="formation" v-if="formation" />
+        <AsideLeft
+            class="left"
+            @handleSelectFormation="handleSelectFormation"
+            :formations="formations"
+            :isAddFormation="isAddFormation"
+            @handleAddFormation="handleAddFormation"
+            @handleAddCourse="handleAddCourse"
+        />
+        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse" />
+        <AddFormation class="right" v-if="isAddFormation" />
+        <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
         <Loader v-if="isLoadingApi" />
     </div>
 </template>
@@ -11,6 +20,8 @@ import Callendar from "../components/Callendar.vue";
 import AsideLeft from "../components/AsideLeft.vue";
 import useFetch from "../mixins/useFetch.vue";
 import Loader from "../components/Loader.vue";
+import AddFormation from "../components/AddFormation.vue";
+import AddCourse from "../components/AddCourse.vue";
 export default {
     name: "App",
     mixins: [useFetch],
@@ -18,15 +29,21 @@ export default {
         Callendar,
         AsideLeft,
         Loader,
+        AddFormation,
+        AddCourse,
     },
     data() {
         return {
             formations: {},
             formation: null,
+            isAddFormation: false,
+            isAddCourse: false,
         };
     },
     methods: {
         handleSelectFormation(formation) {
+            this.isAddCourse = false;
+            this.isAddFormation = false;
             this.formation = formation;
         },
         formatFormations(formationsArray) {
@@ -40,6 +57,14 @@ export default {
                 this.formations[formation.sector].formations.push(formation);
             });
         },
+        handleAddFormation() {
+            if (this.isAddCourse) this.isAddCourse = false;
+            this.isAddFormation = true;
+        },
+        handleAddCourse() {
+            if (this.isAddFormation) this.isAddFormation = false;
+            this.isAddCourse = true;
+        },
     },
     async mounted() {
         await this.fetchApi("formation");
@@ -52,20 +77,7 @@ export default {
 };
 </script>
 
-<style lang="css">
-:root {
-    font-size: 62.5%;
-}
-body {
-    font-size: 1.6rem;
-}
-*,
-::before,
-::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<style lang="css" scoped>
 .main-container {
     display: flex;
 }

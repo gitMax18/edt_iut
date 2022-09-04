@@ -16,17 +16,18 @@ class User
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     /** 
-     * @Groups({"course:read", "event:read"})
+     * @Groups({"course:read", "event:read", "user:read"})
      */
     private $id;
-
     #[ORM\Column(type: 'string', length: 255)]
     /** 
-     * @Groups({"course:read", "event:read"})
+     * @Groups({"course:read", "event:read", "user:read"})
      */
     private $firstname;
-
     #[ORM\Column(type: 'string', length: 255)]
+    /** 
+     * @Groups({"user:read"})
+     */
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -43,6 +44,9 @@ class User
 
     #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Event::class)]
     private $events;
+
+    #[ORM\OneToOne(mappedBy: 'responsable', targetEntity: Formation::class, cascade: ['persist', 'remove'])]
+    private $formation;
 
     public function __construct()
     {
@@ -170,6 +174,28 @@ class User
                 $event->setTeacher(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFormation(): ?Formation
+    {
+        return $this->formation;
+    }
+
+    public function setFormation(?Formation $formation): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($formation === null && $this->formation !== null) {
+            $this->formation->setResponsable(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($formation !== null && $formation->getResponsable() !== $this) {
+            $formation->setResponsable($this);
+        }
+
+        $this->formation = $formation;
 
         return $this;
     }

@@ -39,8 +39,6 @@ class CourseFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($course);
 
 
-
-
         $teacher2 = new User;
         $teacher2->setFirstName("roger")
             ->setLastname("Elon")

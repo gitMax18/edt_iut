@@ -18,17 +18,18 @@
         <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div>
         <div class="aside-item" @click="handleClickPreferences">Mes préférences</div>
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
+        <div class="aside-item" @click="handleClickAddFormation">Ajouter formation</div>
+        <div class="aside-item" @click="handleClickAddCourse">Ajouter cour</div>
     </div>
 </template>
 
 <script>
 import AppButton from "./AppButton.vue";
-import { formationMMI, formationGEA } from "../etc";
 import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse"],
     props: {
         formations: {
             type: Object,
@@ -40,19 +41,6 @@ export default {
     data() {
         return {
             isPlanningShow: false,
-            // courses: [
-            //     {
-            //         isShow: false,
-            //         sector: "MMI",
-            //         formations: formationMMI,
-            //     },
-            //     {
-            //         isShow: false,
-            //         sector: "GEA",
-            //         formations: formationGEA,
-            //     },
-            // ],
-            // formations: {},
         };
     },
     methods: {
@@ -91,15 +79,13 @@ export default {
                 this.formations[formation.sector].formations.push(formation);
             });
         },
+        handleClickAddFormation() {
+            this.$emit("handleAddFormation");
+        },
+        handleClickAddCourse() {
+            this.$emit("handleAddCourse");
+        },
     },
-    // async mounted() {
-    //     await this.fetchApi("formation");
-    //     if (this.isFetchError) {
-    //         console.log(this.errorMessageApi);
-    //         return;
-    //     }
-    //     this.formatFormations(this.dataApi.formations);
-    // },
 };
 </script>
 
