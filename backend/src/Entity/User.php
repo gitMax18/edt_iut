@@ -26,7 +26,7 @@ class User
     private $firstname;
     #[ORM\Column(type: 'string', length: 255)]
     /** 
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "course:read"})
      */
     private $lastname;
 

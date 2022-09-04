@@ -7,8 +7,9 @@
             :isAddFormation="isAddFormation"
             @handleAddFormation="handleAddFormation"
             @handleAddCourse="handleAddCourse"
+            @handleShowReporting="handleShowReporting"
         />
-        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse" />
+        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse" :isShowReporting="isShowReporting" />
         <AddFormation class="right" v-if="isAddFormation" />
         <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
         <Loader v-if="isLoadingApi" />
@@ -38,6 +39,7 @@ export default {
             formation: null,
             isAddFormation: false,
             isAddCourse: false,
+            isShowReporting: false,
         };
     },
     methods: {
@@ -64,6 +66,9 @@ export default {
         handleAddCourse() {
             if (this.isAddFormation) this.isAddFormation = false;
             this.isAddCourse = true;
+        },
+        handleShowReporting() {
+            this.isShowReporting = !this.isShowReporting;
         },
     },
     async mounted() {

@@ -29,7 +29,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting"],
     props: {
         formations: {
             type: Object,
@@ -63,7 +63,7 @@ export default {
             console.log("preference");
         },
         handleClickReporting() {
-            console.log("reporting");
+            this.$emit("handleShowReporting");
         },
         handleShowSector(formationKey) {
             this.formations[formationKey].isShow = !this.formations[formationKey].isShow;

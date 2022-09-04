@@ -17,6 +17,7 @@
             @handleCloseModal="handleCloseUpdateModal"
         />
         <Loader v-if="isLoadingApi" />
+        <Reporting :events="calendarOptions.events" :courses="formationCourses" v-if="isShowReporting" />
     </div>
 </template>
 
@@ -30,6 +31,7 @@ import AddEventModal from "./AddEventModal.vue";
 import UpdateEventModal from "./UpdateEventModal.vue";
 import useFetch from "../mixins/useFetch.vue";
 import Loader from "./Loader.vue";
+import Reporting from "./Reporting.vue";
 export default {
     name: "Calendar",
     mixins: [useFetch],
@@ -38,9 +40,11 @@ export default {
         AddEventModal,
         UpdateEventModal,
         Loader,
+        Reporting,
     },
     props: {
         formation: Object,
+        isShowReporting: Boolean,
     },
     watch: {
         formation: {
@@ -156,7 +160,6 @@ export default {
                 return;
             }
             this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
-            console.log("data : ", this.calendarOptions.events);
         },
     },
     async mounted() {
