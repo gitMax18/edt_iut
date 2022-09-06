@@ -1,16 +1,16 @@
 <template>
     <div class="container">
-        <h2 class="title">Modifier les données du cour</h2>
+        <h2 class="title">Modifier les données du cours</h2>
         <form>
             <div class="input-container">
-                <label for="course">cour : </label>
+                <label for="course">Cours : </label>
                 <select name="course" id="course" v-model="course">
                     <option :value="course">{{ course.name }}</option>
                     <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
                 </select>
             </div>
             <div class="input-container">
-                <label for="classroomType">Type salle: </label>
+                <label for="classroomType">Type de salle: </label>
                 <select name="classroomType" id="classroomType" v-model="choosenClassroom">
                     <option value="">Choisissez un type de salle</option>
                     <option v-for="type in classroomTypes" :key="type" :value="type">{{ type }}</option>

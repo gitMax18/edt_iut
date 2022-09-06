@@ -11,7 +11,7 @@
         <div class="input-container">
             <label for="teacher">Professeur</label>
             <select name="teacher" id="teacher" v-model="teacher">
-                <option value="">Choisissez un Professeur</option>
+                <option value="">Choisissez un professeur</option>
                 <option v-for="user in appUsers" :key="user.id" :value="user.id">{{ user.firstname + " " + user.lastname }}</option>
             </select>
         </div>
@@ -24,7 +24,7 @@
             </select>
         </div>
         <div class="input-container">
-            <label for="backgroundColor">Couleur du background</label>
+            <label for="backgroundColor">Couleur du fond</label>
             <input type="color" name="backgroundColor" id="backgroundColor" v-model="backgroundColor" />
         </div>
         <div class="input-container">

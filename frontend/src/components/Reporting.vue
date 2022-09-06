@@ -5,9 +5,9 @@
             <div>
                 <span v-for="(teacher, index) in course.teachers" :key="index">{{ teacher.firstname + " " + teacher.lastname + " " }}</span>
             </div>
-            <div><span>Cour réalisé : </span> {{ course.doneCount }}</div>
-            <div><span>Cour placer non réalisé : </span> {{ course.notDoneCount }}</div>
-            <div><span>Cour a placer : </span> {{ course.notPlacedCount }}</div>
+            <div><span>Cours réalisés : </span> {{ course.doneCount }}</div>
+            <div><span>Cours placés non réalisés : </span> {{ course.notDoneCount }}</div>
+            <div><span>Cours à placer : </span> {{ course.notPlacedCount }}</div>
             <div><span>Nombre total d'heure : </span> {{ course.totalHours }}</div>
         </div>
     </div>
