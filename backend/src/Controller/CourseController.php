@@ -22,7 +22,6 @@ class CourseController extends AbstractController
      */
     public function addCourse(ManagerRegistry $doctrine, Request $request, SerializerInterface $serializer, EntityManagerInterface $em): JsonResponse
     {
-        dd($request);
         $content = $request->toArray();
         $json = $request->getContent();
         $teacher = $doctrine->getRepository(User::class)->find($content["teachers"]);
@@ -37,14 +36,14 @@ class CourseController extends AbstractController
             $em->flush();
         } catch (NotEncodableValueException $e) {
             return $this->json([
+                "success" => false,
                 "message" => $e->getMessage()
             ], 400);
         }
-
         return $this->json([
-            "status" => "success",
+            "success" => true,
             "courseId" => $course->getId(),
-            "message" => "course created"
+            "message" => "cours ajouté"
         ], 201);
     }
 
@@ -57,6 +56,8 @@ class CourseController extends AbstractController
         $courses = $formationRepository->getCourses();
 
         return $this->json([
+            "success" => true,
+            "message" => "Cours récupérés",
             'courses' => $courses,
         ], 200, [], ["groups" => "course:read"]);
     }

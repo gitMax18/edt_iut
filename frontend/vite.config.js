@@ -20,7 +20,6 @@ export default defineConfig({
         ],
     },
     server: {
-<<<<<<< Updated upstream
         // proxy: {
         //     "http://localhost:3000": {
         //         target: "http://localhost:8000",
@@ -29,15 +28,6 @@ export default defineConfig({
         //         rewrite: (path) => path.replace("http://localhost:3000", ""),
         //     },
         // },
-        cors : false
-=======
-        proxy: {
-            "/api": {
-                target: "*",
-                changeOrigin: true,
-                secure: true,
-            },
-        },
->>>>>>> Stashed changes
+        // cors: false,
     },
 });

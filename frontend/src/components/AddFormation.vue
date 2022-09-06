@@ -28,7 +28,7 @@ import useFetch from "../mixins/useFetch.vue";
 import { useToast } from "vue-toastification";
 export default {
     name: "AddFormation",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     data() {
         return {
             name: "",
@@ -37,7 +37,6 @@ export default {
             responsable: "",
             appUsers: [],
             responsable: null,
-            toast: useToast(),
         };
     },
     methods: {
@@ -50,7 +49,7 @@ export default {
             });
 
             if (this.isErrorMessageApi) {
-                this.toast(this.errorMessageApi);
+                this.toast.error(this.errorMessageApi);
                 return;
             }
             console.log("data", this.dataApi);
@@ -66,6 +65,7 @@ export default {
         }
 
         this.appUsers = this.dataApi.users;
+        console.log(this.dataApi.message);
     },
 };
 </script>

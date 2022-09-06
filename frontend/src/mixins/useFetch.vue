@@ -29,7 +29,14 @@ export default {
                 if (!response.ok) {
                     throw new Error(response.message);
                 }
-                this.dataApi = await response.json();
+                const data = await response.json();
+                console.log(data);
+
+                if (!data.success) {
+                    throw new Error(data.message);
+                }
+
+                this.dataApi = data;
             } catch (error) {
                 this.errorMessageApi = error.message;
             } finally {

@@ -32,9 +32,10 @@ import UpdateEventModal from "./UpdateEventModal.vue";
 import useFetch from "../mixins/useFetch.vue";
 import Loader from "./Loader.vue";
 import Reporting from "./Reporting.vue";
+import useToast from "../mixins/useToast.vue";
 export default {
     name: "Calendar",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     components: {
         FullCalendar,
         AddEventModal,
@@ -110,7 +111,6 @@ export default {
         handleEvents() {},
         handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
-            console.log("update : ", dataEvent.oldEvent);
             await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
                 course: dataEvent.event.extendedProps.course.id,
                 teacher: dataEvent.event.extendedProps.teacher.id,
@@ -120,14 +120,12 @@ export default {
             });
 
             if (this.isFetchError) {
-                console.log(this.errorMessageApi);
                 dataEvent.revert();
+                this.toast.error(this.errorMessageApi);
                 return;
             }
-            if (this.dataApi.status === "error") {
-                dataEvent.revert();
-            }
 
+            // this.toast.success(this.dataApi.message);
             console.log(this.dataApi.message);
         },
         handleRemoveEvent() {},
@@ -170,6 +168,7 @@ export default {
             this.calendarOptions.events = this.dataApi.events.map((event) => this.transformApiEventToEvent(event));
         },
     },
+
     async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
     },

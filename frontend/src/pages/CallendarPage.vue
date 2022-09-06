@@ -71,12 +71,15 @@ export default {
             this.isShowReporting = !this.isShowReporting;
         },
     },
+
     async mounted() {
         await this.fetchApi("formation");
+
         if (this.isFetchError) {
             console.log(this.errorMessageApi);
             return;
         }
+        console.log(this.dataApi);
         this.formatFormations(this.dataApi.formations);
     },
 };

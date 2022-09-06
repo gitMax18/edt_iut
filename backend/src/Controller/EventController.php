@@ -34,6 +34,8 @@ class EventController extends AbstractController
         // }
 
         return $this->json([
+            "success" => true,
+            "message" => "event récupéré",
             "events" => $events,
         ], 200, [], ["groups" => "event:read"]);
     }
@@ -53,6 +55,8 @@ class EventController extends AbstractController
         // }
 
         return $this->json([
+            "success" => true,
+            "message" => "cours récupéré",
             "events" => $events,
         ], 200, [], ["groups" => "event:read"]);
     }
@@ -70,8 +74,8 @@ class EventController extends AbstractController
 
         if (!empty($events)) {
             return $this->json([
-                "status" => "error",
-                "message" => "Ce professeur à déja cour pendant ces dates",
+                "success" => false,
+                "message" => "Ce professeur à déja cours pendant ces dates",
                 "events" => $events
             ]);
         }
@@ -92,13 +96,14 @@ class EventController extends AbstractController
             $em->flush();
         } catch (NotEncodableValueException $e) {
             return $this->json([
-                "error" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ], 400);
         }
         return $this->json([
-            "status" => "succes",
+            "success" => true,
             "eventId" => $event->getId(),
-            "message" => "event created"
+            "message" => "cours ajouté"
         ], 201);
     }
 
@@ -111,7 +116,8 @@ class EventController extends AbstractController
 
         if (!$event) {
             return $this->json([
-                "message" => "No event find...",
+                "success" => false,
+                "message" => "Aucun cours trouvé",
             ], 400);
         }
 
@@ -119,7 +125,8 @@ class EventController extends AbstractController
         $em->flush();
 
         return $this->json([
-            "message" => "event deleted",
+            "success" => true,
+            "message" => "Cours supprimé",
         ], 200);
     }
 
@@ -134,7 +141,8 @@ class EventController extends AbstractController
         $event = $repository->find($id);
         if (!$event) {
             return $this->json([
-                "message" => "No event find...",
+                "success" => false,
+                "message" => "Aucun event trouvé",
             ], 400);
         }
         $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
@@ -144,7 +152,7 @@ class EventController extends AbstractController
 
         if (!empty($events)) {
             return $this->json([
-                "status" => "error",
+                "success" => false,
                 "message" => "Ce professeur à déja cour pendant ces dates",
                 "events" => $events
             ], 200, [], ["groups" => "event:read"]);
@@ -161,7 +169,8 @@ class EventController extends AbstractController
         $em->flush();
 
         return $this->json([
-            "message" => "event updated",
+            "success" => true,
+            "message" => "Cours modifié",
         ], 200);
     }
 }
