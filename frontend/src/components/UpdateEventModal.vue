@@ -12,8 +12,10 @@
             <div class="input-container">
                 <label for="classroomType">Type de salle: </label>
                 <select name="classroomType" id="classroomType" v-model="choosenClassroom">
-                    <option value="">Choisissez un type de salle</option>
-                    <option v-for="type in classroomTypes" :key="type" :value="type">{{ type }}</option>
+                    <option value="Non désigné">Non désigné</option>
+                    <optgroup v-for="(type, index) in classroomTypes" :key="type" :label="index">
+                        <option v-for="place in type" :key="place" :value="`${index} ${place}`">{{ place }}</option>
+                    </optgroup>
                 </select>
             </div>
             <div class="input-container" v-if="course">

@@ -66,11 +66,11 @@ export default {
                     right: "dayGridMonth,timeGridWeek,timeGridDay",
                 },
                 buttonText: {
-                today: 'Aujourd\'hui',
-                month: 'Mois',
-                week: 'Semaine',
-                day: 'Jour',
-                list: 'Liste'
+                    today: "Aujourd'hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste",
                 },
                 weekNumbers: true,
                 initialView: "timeGridWeek",
@@ -176,7 +176,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .calendar-container {
     padding: 1rem;
 }
