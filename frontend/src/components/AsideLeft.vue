@@ -1,5 +1,8 @@
 <template>
     <div class="aside-left-container">
+        <div>
+            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5">
+        </div>
         <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
             <AppButton message="S'enregistrer" @handleClick="handleClickRegister" />
@@ -18,8 +21,8 @@
         <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div>
         <div class="aside-item" @click="handleClickPreferences">Mes préférences</div>
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
-        <div class="aside-item" @click="handleClickAddFormation">Ajouter formation</div>
-        <div class="aside-item" @click="handleClickAddCourse">Ajouter cour</div>
+        <div class="aside-item" @click="handleClickAddFormation">Ajouter une formation</div>
+        <div class="aside-item" @click="handleClickAddCourse">Ajouter un cours</div>
     </div>
 </template>
 
@@ -92,14 +95,17 @@ export default {
 <style lang="scss" scoped>
 
 
+
 .aside-left-container {
-    padding: 1rem;
+    padding: 2.2rem;
+    min-height: 100vh;
 }
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    margin: 2.5rem 0
 }
 
 .aside-item {
@@ -140,5 +146,12 @@ export default {
     &:hover {
         color: $color-primary;
     }
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 6rem 0 5.5rem 0;
 }
 </style>
