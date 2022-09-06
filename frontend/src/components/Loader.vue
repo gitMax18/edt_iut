@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container loading-text">
         <h2>Chargement...</h2>
     </div>
 </template>
@@ -17,5 +17,9 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
+}
+
+.loading-text {
+    @include font-family-light;
 }
 </style>

@@ -1,6 +1,22 @@
 //colors
-$color-primary: #2c3e50;
-$color-primary-dark: #1a252f;
-$color-primary-light: #76828e;
+$color-primary: #086BB2;
+$color-secondary: #FFFBFC;
+$color-primary-dark: #1A1423;
+$color-primary-light: #7ba0c5;
 //others
 $border-radius: 0.5rem;
+//fonts
+@mixin font-family-light() {
+    font-family: 'Lato',sans-serif;
+    font-weight: 300;
+}
+
+@mixin font-family-regular() {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+@mixin font-family-bold() {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+}

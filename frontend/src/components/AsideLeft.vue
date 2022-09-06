@@ -90,6 +90,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
 .aside-left-container {
     padding: 1rem;
 }
@@ -101,6 +103,7 @@ export default {
 }
 
 .aside-item {
+    @include font-family-bold;
     position: relative;
     width: fit-content;
     font-weight: bold;
@@ -117,23 +120,25 @@ export default {
 }
 
 .course-list {
+    @include font-family-regular;
     list-style-type: circle;
     padding-left: 2rem;
 }
 
 .course-sector {
+    @include font-family-bold;
     color: $color-primary;
     cursor: pointer;
-    font-weight: bold;
     &:hover {
         color: $color-primary-dark;
     }
 }
 .course-item {
-    color: $color-primary;
+    @include font-family-regular;
+    color: $color-primary-dark;
     cursor: pointer;
     &:hover {
-        color: $color-primary-dark;
+        color: $color-primary;
     }
 }
 </style>
