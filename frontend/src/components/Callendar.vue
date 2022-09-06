@@ -64,12 +64,20 @@ export default {
                     center: "title",
                     right: "dayGridMonth,timeGridWeek,timeGridDay",
                 },
+                buttonText: {
+                today: 'Aujourd\'hui',
+                month: 'Mois',
+                week: 'Semaine',
+                day: 'Jour',
+                list: 'Liste'
+                },
+                weekNumbers: true,
                 initialView: "timeGridWeek",
                 editable: true,
                 selectable: true,
                 weekends: false,
                 timeZone: "local",
-                locales: "fr",
+                locale: "fr",
                 allDaySlot: false,
                 slotMinTime: "06:00:00",
                 slotMaxTime: "19:00:00",
@@ -169,6 +177,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .calendar-container {
     padding: 1rem;
 }
