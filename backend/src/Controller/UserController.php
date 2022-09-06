@@ -18,6 +18,8 @@ class UserController extends AbstractController
         $users = $doctrine->getRepository(User::class)->findAll();
 
         return $this->json([
+            "success" => true,
+            "message" => "Utilisateur récupéré",
             "users" => $users,
         ], 200, [], ["groups" => "user:read"]);
     }

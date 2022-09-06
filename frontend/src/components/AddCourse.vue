@@ -2,11 +2,11 @@
     <form>
         <div class="input-container">
             <label for="name">Nom</label>
-            <input type="text" name="name" id="name" v-model="name" />
+            <input type="text" name="name" id="name" v-model="name" required />
         </div>
         <div class="input-container">
             <label for="hours">Nombre d'heures</label>
-            <input type="number" name="hours" id="hours" v-model="hours" />
+            <input type="number" name="hours" id="hours" v-model="hours" required />
         </div>
         <div class="input-container">
             <label for="teacher">Professeur</label>
@@ -25,15 +25,15 @@
         </div>
         <div class="input-container">
             <label for="backgroundColor">Couleur du background</label>
-            <input type="color" name="backgroundColor" id="backgroundColor" v-model="backgroundColor" />
+            <input type="color" name="backgroundColor" id="backgroundColor" v-model="backgroundColor" required />
         </div>
         <div class="input-container">
             <label for="borderColor">Couleur de la bordure</label>
-            <input type="color" name="borderColor" id="borderColor" v-model="borderColor" />
+            <input type="color" name="borderColor" id="borderColor" v-model="borderColor" required />
         </div>
         <div class="input-container">
             <label for="textColor">Couleur du texte</label>
-            <input type="color" name="textColor" id="textColor" v-model="textColor" />
+            <input type="color" name="textColor" id="textColor" v-model="textColor" required />
         </div>
         <button @click.prevent="handleClick">Valider</button>
     </form>
@@ -41,10 +41,10 @@
 
 <script>
 import useFetch from "../mixins/useFetch.vue";
-import { useToast } from "vue-toastification";
+import useToast from "../mixins/useToast.vue";
 export default {
     name: "AddCourse",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     props: {
         formations: Object,
     },
@@ -58,7 +58,6 @@ export default {
             borderColor: "#000000",
             backgroundColor: "#f1f1f1",
             appUsers: [],
-            toast: useToast(),
         };
     },
     methods: {
@@ -73,12 +72,11 @@ export default {
                 textColor: this.textColor,
             });
 
-            if (this.isErrorMessageApi) {
-                this.toast(this.errorMessageApi);
+            if (this.isFetchError) {
+                this.toast.error(this.errorMessageApi);
                 return;
             }
-            console.log(this.dataApi);
-            this.toast.success(this.dataApi);
+            this.toast.success(this.dataApi.message);
         },
     },
     async mounted() {
@@ -89,7 +87,7 @@ export default {
             return;
         }
         this.appUsers = this.dataApi.users;
-        console.log(this.dataApi);
+        console.log(this.dataApi.message);
     },
 };
 </script>

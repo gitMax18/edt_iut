@@ -24,6 +24,8 @@ class FormationController extends AbstractController
         $formations = $doctrine->getRepository(Formation::class)->findAll();
 
         return $this->json([
+            "success" => true,
+            "message" => "Formation ajouter avec success",
             "formations" => $formations,
         ], 200, [], ["groups" => "formation:read"]);
     }
@@ -40,7 +42,7 @@ class FormationController extends AbstractController
 
         if (!$responsable) {
             return $this->json([
-                "status" => "fail",
+                "success" => false,
                 "message" => "Veuillez ajouter un responsable"
             ]);
         }
@@ -52,12 +54,13 @@ class FormationController extends AbstractController
             $em->persist($formation);
             $em->flush();
             return $this->json([
-                "status" => "succes",
+                "success" => true,
                 "formationId" => $formation->getId(),
-                "message" => "formation created"
+                "message" => "Formation ajouté"
             ], 201);
         } catch (NotEncodableValueException $e) {
             return $this->json([
+                "success" => false,
                 "message" => $e->getMessage()
             ], 400);
         }

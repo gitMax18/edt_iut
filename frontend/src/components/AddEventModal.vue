@@ -8,8 +8,6 @@
                     <option value="">Choisissez un type de cour</option>
                     <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
                 </select>
-                <!-- <label for="course">Cour: </label>
-                <input type="text" id="course" v-model="course" /> -->
             </div>
             <div class="input-container">
                 <label for="classroomType">Type salle: </label>
@@ -33,10 +31,12 @@
 <script>
 import { classroomType } from "@/etc.js";
 import useFetch from "../mixins/useFetch.vue";
+import useToast from "../mixins/useToast.vue";
+
 export default {
     name: "AddEventModal",
     emits: ["handleSubmit"],
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     emits: ["handleCloseModal"],
     props: {
         selectedDates: Object,
@@ -70,17 +70,12 @@ export default {
             await this.fetchApi("event", "POST", this.transformEventToApiEvent(newEvent));
 
             if (this.isFetchError) {
-                console.log(this.errorMessageApi);
-                return;
-            }
-
-            if (this.dataApi.status === "error") {
-                console.log(this.dataApi.message);
+                this.toast.error(this.errorMessageApi);
                 return;
             }
 
             this.calendarApi.addEvent({ ...newEvent, id: this.dataApi.eventId }, true);
-
+            this.toast.success(this.dataApi.message);
             this.calendarApi.unselect();
             this.$emit("handleCloseModal");
         },

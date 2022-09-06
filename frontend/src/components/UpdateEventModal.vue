@@ -32,9 +32,10 @@
 <script>
 import { classroomType } from "@/etc.js";
 import useFetch from "../mixins/useFetch.vue";
+import useToast from "../mixins/useToast.vue";
 export default {
     name: "updateEventModal",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     emits: ["handleCloseModal"],
     props: {
         selectedDates: Object,
@@ -63,9 +64,10 @@ export default {
             await this.fetchApi(`event/${this.selectedDates.event.id}`, "DELETE");
 
             if (this.isFetchError) {
-                console.log(this.errorMessageApi);
+                this.toast.error(this.errorMessageApi);
                 return;
             }
+            this.toast.success(this.dataApi.message);
             this.selectedDates.event.remove();
 
             this.$emit("handleCloseModal");

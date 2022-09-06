@@ -9,7 +9,6 @@ export default {
 </script>
 
 <style lang="scss">
-<<<<<<< Updated upstream
 :root {
     font-size: 62.5%;
 }
@@ -22,12 +21,17 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-=======
+}
 p {
     @include font-family-regular;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     @include font-family-bold;
 }
 
@@ -37,6 +41,5 @@ body {
 
 .fc-event-main {
     padding: 3px;
->>>>>>> Stashed changes
 }
 </style>
