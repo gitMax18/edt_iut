@@ -1,17 +1,15 @@
 <template>
     <div class="main-container">
-        <AsideLeft
-            class="left"
-            @handleSelectFormation="handleSelectFormation"
-            :formations="formations"
-            :isAddFormation="isAddFormation"
-            @handleAddFormation="handleAddFormation"
-            @handleAddCourse="handleAddCourse"
-            @handleShowReporting="handleShowReporting"
-        />
-        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse" :isShowReporting="isShowReporting" />
+        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" :formations="formations"
+            :isAddFormation="isAddFormation" @handleAddFormation="handleAddFormation" @handleAddCourse="handleAddCourse"
+            @handleShowReporting="handleShowReporting" @handleAddCsvCourse="handleAddCsvCourse"
+            @handleAddCsvTeacher="handleAddCsvTeacher" />
+        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse"
+            :isShowReporting="isShowReporting" />
         <AddFormation class="right" v-if="isAddFormation" />
         <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
+        <AddCsvCourse class="right" v-if="isAddCsvCourse" />
+        <AddCsvTeacher class="right" v-if="isAddCsvTeacher" />
         <Loader v-if="isLoadingApi" />
     </div>
 </template>
@@ -23,6 +21,8 @@ import useFetch from "../mixins/useFetch.vue";
 import Loader from "../components/Loader.vue";
 import AddFormation from "../components/AddFormation.vue";
 import AddCourse from "../components/AddCourse.vue";
+import AddCsvCourse from '../components/AddCsvCourse.vue'
+import AddCsvTeacher from '../components/AddCsvTeacher.vue'
 export default {
     name: "App",
     mixins: [useFetch],
@@ -32,6 +32,8 @@ export default {
         Loader,
         AddFormation,
         AddCourse,
+        AddCsvCourse,
+        AddCsvTeacher
     },
     data() {
         return {
@@ -39,6 +41,8 @@ export default {
             formation: null,
             isAddFormation: false,
             isAddCourse: false,
+            isAddCsvCourse: false,
+            isAddCsvTeacher: false,
             isShowReporting: false,
         };
     },
@@ -69,6 +73,21 @@ export default {
         },
         handleShowReporting() {
             this.isShowReporting = !this.isShowReporting;
+        },
+        handleAddCsvCourse() {
+            this.isAddFormation = false;
+            this.isAddCourse = false;
+            this.isAddCsvTeacher = false;
+
+            this.isAddCsvCourse = true;
+        },
+        handleAddCsvTeacher()
+        {
+        this.isAddFormation = false;
+        this.isAddCourse = false;
+        this.isAddCsvCourse = false;
+
+        this.isAddCsvTeacher = true;
         },
     },
 
