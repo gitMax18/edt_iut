@@ -1,7 +1,8 @@
 <template>
     <div class="aside-left-container">
-        <div>
-            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5">
+        <div class="logo">
+            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201"
+                height="84.5">
         </div>
         <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
@@ -12,7 +13,8 @@
             <div v-for="(value, key) in formations" :key="key" class="course-container">
                 <div class="course-sector" @click="handleShowSector(key)">{{ key }}</div>
                 <ul class="course-list" v-if="value.isShow">
-                    <li class="course-item" v-for="(formation, index) in value.formations" @click="handleClickFormation(formation)" :key="index">
+                    <li class="course-item" v-for="(formation, index) in value.formations"
+                        @click="handleClickFormation(formation)" :key="index">
                         {{ formation.name }}
                     </li>
                 </ul>
@@ -23,6 +25,8 @@
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
         <div class="aside-item" @click="handleClickAddFormation">Ajouter une formation</div>
         <div class="aside-item" @click="handleClickAddCourse">Ajouter un cours</div>
+        <div class="aside-item" @click="handleClickAddCsvCourse">Ajouter une maquette de formation </div>
+        <div class="aside-item" @click="handleClickAddCsvTeacher">Ajouter une liste d'enseignants</div>
     </div>
 </template>
 
@@ -32,7 +36,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting", "handleAddCsvCourse", "handleAddCsvTeacher"],
     props: {
         formations: {
             type: Object,
@@ -88,6 +92,14 @@ export default {
         handleClickAddCourse() {
             this.$emit("handleAddCourse");
         },
+        handleClickAddCsvCourse()
+        {
+        this.$emit("handleAddCsvCourse");
+        },
+        handleClickAddCsvTeacher()
+        {
+        this.$emit("handleAddCsvTeacher");
+},
     },
 };
 </script>
