@@ -17,27 +17,32 @@ class FormationFixtures extends Fixture
         $formation = new Formation;
         $formation->setName("LP MIAW")
             ->setSector("MMI")
-            ->setYear("2022");
+            ->setYear("2022")
+            ->setGroupeNb(0);
 
         $formation2 = new Formation;
         $formation2->setName("LP CAN")
             ->setSector("MMI")
-            ->setYear("2022");
+            ->setYear("2022")
+            ->setGroupeNb(0);
 
         $formation3 = new Formation;
         $formation3->setName("BUT 1")
             ->setSector("GEA")
-            ->setYear("2022");
+            ->setYear("2022")
+            ->setGroupeNb(3);
 
         $formation4 = new Formation;
         $formation4->setName("BUT 1")
             ->setSector("MMI")
-            ->setYear("2022");
+            ->setYear("2022")
+            ->setGroupeNb(2);
 
         $formation5 = new Formation;
         $formation5->setName("BUT 2")
             ->setSector("GEA")
-            ->setYear("2022");
+            ->setYear("2022")
+            ->setGroupeNb(3);
 
         $manager->persist($formation);
         $manager->persist($formation2);

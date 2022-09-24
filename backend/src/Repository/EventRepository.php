@@ -60,7 +60,7 @@ class EventRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         $query = $em->createQuery(
-            'SELECT e, c.textColor, c.backgroundColor, c.borderColor
+            'SELECT e, c
              FROM App\Entity\Event e
              INNER JOIN e.course c
              WHERE e.formation = :formationId

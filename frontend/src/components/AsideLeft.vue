@@ -1,7 +1,7 @@
 <template>
     <div class="aside-left-container">
         <div>
-            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5">
+            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
         </div>
         <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
@@ -23,6 +23,7 @@
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
         <div class="aside-item" @click="handleClickAddFormation">Ajouter une formation</div>
         <div class="aside-item" @click="handleClickAddCourse">Ajouter un cours</div>
+        <div class="aside-item" @click="handleClickMassiveImport">Import massive</div>
     </div>
 </template>
 
@@ -32,7 +33,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting", "handleMassiveImport"],
     props: {
         formations: {
             type: Object,
@@ -88,14 +89,14 @@ export default {
         handleClickAddCourse() {
             this.$emit("handleAddCourse");
         },
+        handleClickMassiveImport() {
+            this.$emit("handleMassiveImport");
+        },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-
-
-
 .aside-left-container {
     padding: 2.2rem;
     min-height: 100vh;
@@ -105,7 +106,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin: 2.5rem 0
+    margin: 2.5rem 0;
 }
 
 .aside-item {

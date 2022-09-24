@@ -108,6 +108,12 @@ class Event
         return $this;
     }
 
+    public function removeTeacher(): self
+    {
+        $this->teacher = null;
+        return $this;
+    }
+
     public function getCourse(): ?Course
     {
         return $this->course;

@@ -21,11 +21,11 @@ export default defineConfig({
     },
     server: {
         // proxy: {
-        //     "http://localhost:3000": {
-        //         target: "http://localhost:8000",
+        //     "/api": {
+        //         target: "*",
         //         changeOrigin: true,
-        //         secure: false,
-        //         rewrite: (path) => path.replace("http://localhost:3000", ""),
+        //         secure: true,
+        //         // ws: true,
         //     },
         // },
         // cors: false,

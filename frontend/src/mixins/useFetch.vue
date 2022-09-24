@@ -15,27 +15,28 @@ export default {
         };
     },
     methods: {
-        async fetchApi(endUrl = "event", method = "GET", body = null) {
+        async fetchApi(endUrl = "event", method = "GET", body = null, contentType = "application/json") {
             try {
                 this.isLoadingApi = true;
                 this.errorMessageApi = "";
+                if (contentType !== "multipart/form-data" && body !== null) {
+                    body = JSON.stringify(body);
+                }
                 const response = await fetch(this.baseUrl + endUrl, {
                     method,
                     headers: {
-                        "Content-Type": "application/json",
+                        // "Content-Type": contentType,
                     },
-                    body: body ? JSON.stringify(body) : null,
+                    body,
                 });
                 if (!response.ok) {
-                    throw new Error(response.message);
+                    throw new Error("Une erreur interne s'est produite");
                 }
                 const data = await response.json();
-                console.log(data);
 
                 if (!data.success) {
                     throw new Error(data.message);
                 }
-
                 this.dataApi = data;
             } catch (error) {
                 this.errorMessageApi = error.message;
@@ -45,36 +46,39 @@ export default {
         },
 
         transformApiEventToEvent(event) {
-            // console.log("event ", event);
+            console.log("event", event);
             return {
-                id: event[0].id,
-                title: event[0].course.name,
-                start: event[0].startAt.slice(0, -6),
-                end: event[0].endAt.slice(0, -6),
-                backgroundColor: event.backgroundColor,
-                borderColor: event.borderColor,
-                textColor: event.textColor,
+                id: event.id,
+                title: event.course.name,
+                start: event.startAt.slice(0, -6),
+                end: event.endAt.slice(0, -6),
+                backgroundColor: event.course.backgroundColor,
+                borderColor: event.course.borderColor,
+                textColor: event.course.textColor,
                 extendedProps: {
-                    classroom: event[0].classroom,
-                    teacher: event[0].teacher,
-                    formation: event[0].formation,
-                    course: event[0].course,
+                    classroom: event.classroom,
+                    teacher: event.teacher,
+                    formation: event.formation,
+                    course: event.course,
                 },
             };
         },
         transformEventToApiEvent(event) {
-            // console.log("apiEvent", event);
+            // console.log("event : ", event);
+            // let teachers = null;
+            // if (event.extendedProps.teacher !== "none") {
+            //     teachers = event.extendedProps.teacher.map((teacherObject) => {
+            //         return teacherObject.id;
+            //     });
+            // }
             return {
                 course: event.extendedProps.course.id,
                 startAt: event.start,
                 endAt: event.end,
                 classroom: event.extendedProps.classroom,
-                teacher: event.extendedProps.teacher.id,
+                teacher: event.extendedProps.teacher?.id,
                 formation: event.extendedProps.formation.id,
             };
-        },
-        getSlug(str) {
-            return str.replace(" ", "-");
         },
     },
 };

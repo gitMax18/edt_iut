@@ -42,15 +42,29 @@ class Course
 
     #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'courses')]
     private $formation;
-
+    /** 
+     * @Groups({"event:read"})
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $backgroundColor;
-
+    /** 
+     * @Groups({"event:read"})
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $borderColor;
-
+    /** 
+     * @Groups({"event:read"})
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $textColor;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $type;
+    /** 
+     * @Groups({"course:read","event:read"})
+     */
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $groupe;
 
     public function __construct()
     {
@@ -185,6 +199,30 @@ class Course
     public function setTextColor(?string $textColor): self
     {
         $this->textColor = $textColor;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?int
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?int $groupe): self
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }

@@ -8,10 +8,12 @@
             @handleAddFormation="handleAddFormation"
             @handleAddCourse="handleAddCourse"
             @handleShowReporting="handleShowReporting"
+            @handleMassiveImport="handleMassiveImport"
         />
-        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse" :isShowReporting="isShowReporting" />
+        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse && !isShowMassiveImport" :isShowReporting="isShowReporting" />
         <AddFormation class="right" v-if="isAddFormation" />
         <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
+        <MassiveImport class="right" v-if="isShowMassiveImport" />
         <Loader v-if="isLoadingApi" />
     </div>
 </template>
@@ -23,6 +25,7 @@ import useFetch from "../mixins/useFetch.vue";
 import Loader from "../components/Loader.vue";
 import AddFormation from "../components/AddFormation.vue";
 import AddCourse from "../components/AddCourse.vue";
+import MassiveImport from "../components/MassiveImport.vue";
 export default {
     name: "App",
     mixins: [useFetch],
@@ -32,6 +35,7 @@ export default {
         Loader,
         AddFormation,
         AddCourse,
+        MassiveImport,
     },
     data() {
         return {
@@ -40,12 +44,14 @@ export default {
             isAddFormation: false,
             isAddCourse: false,
             isShowReporting: false,
+            isShowMassiveImport: false,
         };
     },
     methods: {
         handleSelectFormation(formation) {
             this.isAddCourse = false;
             this.isAddFormation = false;
+            this.isShowMassiveImport = false;
             this.formation = formation;
         },
         formatFormations(formationsArray) {
@@ -60,15 +66,22 @@ export default {
             });
         },
         handleAddFormation() {
-            if (this.isAddCourse) this.isAddCourse = false;
+            this.isShowMassiveImport = false;
+            this.isAddCourse = false;
             this.isAddFormation = true;
         },
         handleAddCourse() {
-            if (this.isAddFormation) this.isAddFormation = false;
+            this.isAddFormation = false;
+            this.isShowMassiveImport = false;
             this.isAddCourse = true;
         },
         handleShowReporting() {
             this.isShowReporting = !this.isShowReporting;
+        },
+        handleMassiveImport() {
+            this.isAddFormation = false;
+            this.isAddCourse = false;
+            this.isShowMassiveImport = true;
         },
     },
 

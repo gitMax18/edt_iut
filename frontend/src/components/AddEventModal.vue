@@ -6,7 +6,7 @@
                 <label for="course">Cours : </label>
                 <select name="course" id="course" v-model="course">
                     <option value="">Choisissez un type de cours</option>
-                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
+                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.groupe ? `${course.name} groupe : ${course.groupe}` : course.name }}</option>
                 </select>
             </div>
             <div class="input-container">
@@ -19,8 +19,9 @@
                 </select>
             </div>
             <div class="input-container" v-if="course">
+                <label for="teacher">Choisissez un professeur</label>
                 <select name="teacher" id="teacher" v-model="teacher">
-                    <option value="">Choisissez un professeur</option>
+                    <option>Non choisie</option>
                     <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
                 </select>
             </div>

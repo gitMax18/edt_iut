@@ -20,7 +20,8 @@
             </div>
             <div class="input-container" v-if="course">
                 <select name="teacher" id="teacher" v-model="teacher">
-                    <option :value="teacher">{{ teacher.firstname }}</option>
+                    <option v-if="teacher?.firstname" :value="teacher">{{ teacher.firstname + " " + teacher.lastname }}</option>
+                    <option>Non choisie</option>
                     <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
                 </select>
             </div>
@@ -54,10 +55,26 @@ export default {
     },
     methods: {
         async handleUpdate() {
+            await this.fetchApi(`event/${this.selectedDates.event.id}`, "PUT", {
+                course: this.course.id,
+                teacher: this.teacher?.id,
+                classroom: this.choosenClassroom,
+                startAt: this.selectedDates.event.startStr,
+                endAt: this.selectedDates.event.endStr,
+            });
+            if (this.isFetchError) {
+                // dataEvent.revert();
+                this.toast.error(this.errorMessageApi);
+                this.selectedDates.revert();
+                return;
+            }
+
+            this.toast.success(this.dataApi.message);
+            // console.log(this.dataApi.message);
             this.selectedDates.event.setProp("title", this.course.name);
             this.selectedDates.event.setExtendedProp("classroom", this.choosenClassroom);
-            this.selectedDates.event.setExtendedProp("teacher", this.teacher);
             this.selectedDates.event.setExtendedProp("course", this.course);
+            this.selectedDates.event.setExtendedProp("teacher", this.teacher);
 
             this.$emit("handleCloseModal");
         },
@@ -74,6 +91,11 @@ export default {
 
             this.$emit("handleCloseModal");
         },
+    },
+    mounted() {
+        setTimeout(() => {
+            // console.log(this.selectedDates.event.endStr);
+        }, 1000);
     },
 };
 </script>

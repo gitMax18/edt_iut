@@ -80,8 +80,8 @@ export default {
                 timeZone: "local",
                 locale: "fr",
                 allDaySlot: false,
-                slotMinTime: "06:00:00",
-                slotMaxTime: "19:00:00",
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
                 slotDuration: "00:15:00",
                 events: [],
                 select: this.handleDateSelect,
@@ -105,28 +105,29 @@ export default {
             this.isCreateModalShow = true;
         },
         handleEventClick(clickData) {
+            console.log("click", clickData.event);
             this.selectedDates = clickData;
             this.isUpdateModalShow = true;
         },
         handleEvents() {},
         handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
-            await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
-                course: dataEvent.event.extendedProps.course.id,
-                teacher: dataEvent.event.extendedProps.teacher.id,
-                classroom: dataEvent.event.extendedProps.classroom,
-                startAt: dataEvent.event.startStr,
-                endAt: dataEvent.event.endStr,
-            });
+            if (dataEvent.oldEvent.startStr !== dataEvent.event.startStr) {
+                await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
+                    course: dataEvent.event.extendedProps.course.id,
+                    teacher: dataEvent.event.extendedProps.teacher?.id,
+                    classroom: dataEvent.event.extendedProps.classroom,
+                    startAt: dataEvent.event.startStr,
+                    endAt: dataEvent.event.endStr,
+                });
+                if (this.isFetchError) {
+                    dataEvent.revert();
+                    this.toast.error(this.errorMessageApi);
+                    return;
+                }
 
-            if (this.isFetchError) {
-                dataEvent.revert();
-                this.toast.error(this.errorMessageApi);
-                return;
+                this.toast.success(this.dataApi.message);
             }
-
-            // this.toast.success(this.dataApi.message);
-            console.log(this.dataApi.message);
         },
         handleRemoveEvent() {},
         toggleShowWeekend() {
@@ -136,7 +137,10 @@ export default {
             const textTime = document.createElement("p");
             textTime.innerHTML = `${args.timeText}`;
             const textContent = document.createElement("p");
-            textContent.innerHTML = `${args.event.title} / ${args.event.extendedProps.classroom} / ${args.event.extendedProps.teacher.firstname}`;
+            const title = args.event.extendedProps.course.groupe ? args.event.title + ` groupe : ${args.event.extendedProps.course.groupe}` : args.event.title;
+            textContent.innerHTML = `${title} / ${args.event.extendedProps.classroom} / ${
+                args.event.extendedProps.teacher?.firstname + " " + args.event.extendedProps.teacher?.lastname || "Non assignée"
+            }`;
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
         },

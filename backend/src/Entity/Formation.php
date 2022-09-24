@@ -47,6 +47,9 @@ class Formation
     #[ORM\OneToOne(inversedBy: 'formation', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $responsable;
 
+    #[ORM\Column(type: 'integer')]
+    private $groupeNb;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -162,6 +165,18 @@ class Formation
     public function setResponsable(?User $responsable): self
     {
         $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    public function getGroupeNb(): ?int
+    {
+        return $this->groupeNb;
+    }
+
+    public function setGroupeNb(int $groupeNb): self
+    {
+        $this->groupeNb = $groupeNb;
 
         return $this;
     }
