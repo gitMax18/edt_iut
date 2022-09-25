@@ -46,7 +46,6 @@ export default {
         },
 
         transformApiEventToEvent(event) {
-            console.log("event", event);
             return {
                 id: event.id,
                 title: event.course.name,

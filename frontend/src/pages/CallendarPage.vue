@@ -7,12 +7,14 @@
             :isAddFormation="isAddFormation"
             @handleAddFormation="handleAddFormation"
             @handleAddCourse="handleAddCourse"
+            @handleAddUser="handleAddUser"
             @handleShowReporting="handleShowReporting"
             @handleMassiveImport="handleMassiveImport"
         />
         <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse && !isShowMassiveImport" :isShowReporting="isShowReporting" />
         <AddFormation class="right" v-if="isAddFormation" />
         <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
+        <AddUser class="right" v-if="isAddUser" />
         <MassiveImport class="right" v-if="isShowMassiveImport" />
         <Loader v-if="isLoadingApi" />
     </div>
@@ -22,13 +24,15 @@
 import Callendar from "../components/Callendar.vue";
 import AsideLeft from "../components/AsideLeft.vue";
 import useFetch from "../mixins/useFetch.vue";
+import useToast from "../mixins/useToast.vue";
 import Loader from "../components/Loader.vue";
 import AddFormation from "../components/AddFormation.vue";
 import AddCourse from "../components/AddCourse.vue";
 import MassiveImport from "../components/MassiveImport.vue";
+import AddUser from "../components/AddUser.vue";
 export default {
     name: "App",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     components: {
         Callendar,
         AsideLeft,
@@ -36,6 +40,7 @@ export default {
         AddFormation,
         AddCourse,
         MassiveImport,
+        AddUser,
     },
     data() {
         return {
@@ -43,6 +48,7 @@ export default {
             formation: null,
             isAddFormation: false,
             isAddCourse: false,
+            isAddUser: false,
             isShowReporting: false,
             isShowMassiveImport: false,
         };
@@ -52,6 +58,7 @@ export default {
             this.isAddCourse = false;
             this.isAddFormation = false;
             this.isShowMassiveImport = false;
+            this.isAddUser = false;
             this.formation = formation;
         },
         formatFormations(formationsArray) {
@@ -68,12 +75,20 @@ export default {
         handleAddFormation() {
             this.isShowMassiveImport = false;
             this.isAddCourse = false;
+            this.isAddUser = false;
             this.isAddFormation = true;
         },
         handleAddCourse() {
             this.isAddFormation = false;
             this.isShowMassiveImport = false;
+            this.isAddUser = false;
             this.isAddCourse = true;
+        },
+        handleAddUser() {
+            this.isAddFormation = false;
+            this.isShowMassiveImport = false;
+            this.isAddCourse = false;
+            this.isAddUser = true;
         },
         handleShowReporting() {
             this.isShowReporting = !this.isShowReporting;
@@ -81,6 +96,7 @@ export default {
         handleMassiveImport() {
             this.isAddFormation = false;
             this.isAddCourse = false;
+            this.isAddUser = false;
             this.isShowMassiveImport = true;
         },
     },
@@ -89,7 +105,7 @@ export default {
         await this.fetchApi("formation");
 
         if (this.isFetchError) {
-            console.log(this.errorMessageApi);
+            this.toast.error(this.errorMessageApi);
             return;
         }
         console.log(this.dataApi);

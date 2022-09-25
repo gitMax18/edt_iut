@@ -101,7 +101,21 @@ class CourseController extends AbstractController
                     //     ]);
                     // }
                     $groupeNb =  $formation->getGroupeNb();
-                    for ($y = 1; $y <= $groupeNb; $y++) {
+                    if ($row[4] === "TP" || $row[4] === "TD") {
+                        for ($y = 1; $y <= $groupeNb; $y++) {
+                            $course = new Course();
+                            $course->setName($row[0])
+                                ->setHours($row[1])
+                                ->addTeacher($teacher)
+                                ->setFormation($formation)
+                                ->setType($row[4])
+                                ->setBackgroundColor($row[5])
+                                ->setBorderColor($row[6])
+                                ->setTextColor($row[7])
+                                ->setGroupe($y);
+                            $em->persist($course);
+                        }
+                    } else {
                         $course = new Course();
                         $course->setName($row[0])
                             ->setHours($row[1])
@@ -111,9 +125,10 @@ class CourseController extends AbstractController
                             ->setBackgroundColor($row[5])
                             ->setBorderColor($row[6])
                             ->setTextColor($row[7])
-                            ->setGroupe($y);
+                            ->setGroupe(null);
                         $em->persist($course);
                     }
+
                     $i++;
                 }
             }

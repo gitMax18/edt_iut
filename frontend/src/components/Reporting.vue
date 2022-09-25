@@ -1,15 +1,39 @@
 <template>
     <div class="container">
-        <div class="course-container" v-for="(course, index) in coursesStat" :key="index">
-            <h3 class="course-title">{{ index }}</h3>
-            <div>
-                <span v-for="(teacher, index) in course.teachers" :key="index">{{ teacher.firstname + " " + teacher.lastname + " " }}</span>
-            </div>
-            <div><span>Cours réalisés : </span> {{ course.doneCount }}</div>
-            <div><span>Cours placés non réalisés : </span> {{ course.notDoneCount }}</div>
-            <div><span>Cours à placer : </span> {{ course.notPlacedCount }}</div>
-            <div><span>Nombre total d'heure : </span> {{ course.totalHours }}</div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cours</th>
+                    <th>Heures réalisés</th>
+                    <th>Heures placé non effectué</th>
+                    <th>Heures non placé</th>
+                    <th>Nombre total d'heure</th>
+                    <th>Professeur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(course, index) in coursesStat" :key="index">
+                    <td>{{ index }}</td>
+                    <td>
+                        {{ course.hoursDone }}
+                    </td>
+                    <td>
+                        {{ course.hoursPlacedNotDone }}
+                    </td>
+                    <td>
+                        {{ course.totalHours - course.hoursDone + course.hoursPlacedNotDone }}
+                    </td>
+                    <td>
+                        {{ course.totalHours }}
+                    </td>
+                    <td>
+                        <div v-for="(teacher, index) in course.teachers" :key="index">
+                            {{ teacher.firstname + " " + teacher.lastname + " " }}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -24,21 +48,32 @@ export default {
         coursesStat() {
             const coursesStat = {};
             this.courses.forEach((course) => {
-                coursesStat[course.name] = {
-                    doneCount: 0,
-                    notDoneCount: 0,
-                    notPlacedCount: course.hours,
+                let courseName = "";
+                if (course.groupe != null) {
+                    courseName = course.name + course.groupe;
+                } else {
+                    courseName = course.name;
+                }
+                console.log("course", course);
+                coursesStat[courseName] = {
+                    hoursDone: 0,
+                    hoursPlacedNotDone: 0,
                     totalHours: course.hours,
                     teachers: course.teachers,
                 };
             });
             this.events.forEach((event) => {
-                if (event.end < new Date().toISOString()) {
-                    coursesStat[event.title].doneCount += 1;
+                let courseName;
+                if (event.extendedProps.course.groupe != null) {
+                    courseName = event.extendedProps.course.name + event.extendedProps.course.groupe;
                 } else {
-                    coursesStat[event.title].notDoneCount += 1;
+                    courseName = event.extendedProps.course.name;
                 }
-                coursesStat[event.title].notPlacedCount -= 1;
+                if (event.end < new Date().toISOString()) {
+                    coursesStat[courseName].hoursDone += this.getHours(new Date(event.start), new Date(event.end));
+                } else {
+                    coursesStat[courseName].hoursPlacedNotDone += this.getHours(new Date(event.start), new Date(event.end));
+                }
             });
             return coursesStat;
         },
@@ -46,6 +81,11 @@ export default {
     methods: {
         handleClick() {
             console.log(this.coursesStat);
+        },
+        getHours(start, end) {
+            let diff = (end.getTime() - start.getTime()) / 1000;
+            diff /= 60 * 60;
+            return Math.abs(Math.round(diff));
         },
     },
     mounted() {

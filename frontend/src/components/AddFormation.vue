@@ -77,7 +77,6 @@ export default {
             console.log(this.errorMessageApi);
             return;
         }
-
         this.appUsers = this.dataApi.users;
         console.log(this.dataApi.message);
     },

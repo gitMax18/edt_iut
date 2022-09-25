@@ -18,11 +18,12 @@
                 </ul>
             </div>
         </template>
-        <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div>
-        <div class="aside-item" @click="handleClickPreferences">Mes préférences</div>
+        <!-- <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div> -->
+        <!-- <div class="aside-item" @click="handleClickPreferences">Mes préférences</div> -->
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
         <div class="aside-item" @click="handleClickAddFormation">Ajouter une formation</div>
         <div class="aside-item" @click="handleClickAddCourse">Ajouter un cours</div>
+        <div class="aside-item" @click="handleClickAddUser">Ajouter un utilisateur</div>
         <div class="aside-item" @click="handleClickMassiveImport">Import massive</div>
     </div>
 </template>
@@ -33,7 +34,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting", "handleMassiveImport"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleAddUser", "handleShowReporting", "handleMassiveImport"],
     props: {
         formations: {
             type: Object,
@@ -88,6 +89,9 @@ export default {
         },
         handleClickAddCourse() {
             this.$emit("handleAddCourse");
+        },
+        handleClickAddUser() {
+            this.$emit("handleAddUser");
         },
         handleClickMassiveImport() {
             this.$emit("handleMassiveImport");
