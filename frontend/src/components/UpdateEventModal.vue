@@ -5,8 +5,8 @@
             <div class="input-container">
                 <label for="course">Cours : </label>
                 <select name="course" id="course" v-model="course">
-                    <option :value="course">{{ course.name }}</option>
-                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.name }}</option>
+                    <option :value="course">{{ course.groupe ? `${course.name} groupe : ${course.groupe}` : course.name }}</option>
+                    <option v-for="course in formationCourses" :key="course.id" :value="course">{{ course.groupe ? `${course.name} groupe : ${course.groupe}` : course.name }}</option>
                 </select>
             </div>
             <div class="input-container">
