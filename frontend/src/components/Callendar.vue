@@ -183,6 +183,7 @@ export default {
 
     async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
+        console.log(new Date(this.calendarApi.getDate()).getFullYear());
     },
 };
 </script>

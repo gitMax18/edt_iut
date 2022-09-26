@@ -21,7 +21,7 @@
                         {{ course.hoursPlacedNotDone }}
                     </td>
                     <td>
-                        {{ course.totalHours - course.hoursDone + course.hoursPlacedNotDone }}
+                        {{ course.totalHours - (course.hoursDone + course.hoursPlacedNotDone) }}
                     </td>
                     <td>
                         {{ course.totalHours }}
