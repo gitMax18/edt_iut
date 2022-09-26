@@ -61,7 +61,6 @@ class EventController extends AbstractController
         ], 200, [], ["groups" => "event:read"]);
     }
 
-
     /**
      * @Route("/api/event", name="add_event", methods={"POST"})
      */
@@ -69,15 +68,17 @@ class EventController extends AbstractController
     {
         $content = $request->toArray();
 
-        if (isset($content["teacher"])) {
+        if ($content["isDisableVerification"] == false) {
+            if (isset($content["teacher"])) {
 
-            $events = $doctrine->getRepository(Event::class)->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
-            if (!empty($events)) {
-                return $this->json([
-                    "success" => false,
-                    "message" => "Ce professeur à déja cours pendant ces dates",
-                    "events" => $events
-                ], 200, [], ["groups" => "event:read"]);
+                $events = $doctrine->getRepository(Event::class)->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+                if (!empty($events)) {
+                    return $this->json([
+                        "success" => false,
+                        "message" => "Ce professeur à déja cours pendant ces dates",
+                        "events" => $events
+                    ], 200, [], ["groups" => "event:read"]);
+                }
             }
         }
 
@@ -147,18 +148,20 @@ class EventController extends AbstractController
                 "message" => "Aucun event trouvé",
             ], 400);
         }
-        if (isset($content["teacher"])) {
-            $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
-            $events = array_filter($events, function ($val) use ($id) {
-                return $val[0]->getId() != $id;
-            });
+        if (!isset($content["isDisableVerification"]) or $content["isDisableVerification"] == false) {
+            if (isset($content["teacher"])) {
+                $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+                $events = array_filter($events, function ($val) use ($id) {
+                    return $val[0]->getId() != $id;
+                });
 
-            if (!empty($events)) {
-                return $this->json([
-                    "success" => false,
-                    "message" => "Ce professeur à déja cour pendant ces dates",
-                    "events" => $events
-                ], 200, [], ["groups" => "event:read"]);
+                if (!empty($events)) {
+                    return $this->json([
+                        "success" => false,
+                        "message" => "Ce professeur à déja cour pendant ces dates",
+                        "events" => $events
+                    ], 200, [], ["groups" => "event:read"]);
+                }
             }
         }
 

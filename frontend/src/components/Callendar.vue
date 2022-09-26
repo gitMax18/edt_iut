@@ -18,6 +18,12 @@
         />
         <Loader v-if="isLoadingApi" />
         <Reporting :events="calendarOptions.events" :courses="formationCourses" v-if="isShowReporting" />
+        <div class="disableVerificationContainer">
+            <div>
+                <label for="isDisableVerification">Désactiver la vérification</label>
+                <input type="checkbox" id="isDisableVerification" v-model="isDisableVerification" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -97,6 +103,7 @@ export default {
             isUpdateModalShow: false,
             selectedDates: null,
             formationCourses: [],
+            isDisableVerification: false,
         };
     },
     methods: {
@@ -119,6 +126,7 @@ export default {
                     classroom: dataEvent.event.extendedProps.classroom,
                     startAt: dataEvent.event.startStr,
                     endAt: dataEvent.event.endStr,
+                    isDisableVerification: this.isDisableVerification,
                 });
                 if (this.isFetchError) {
                     dataEvent.revert();
@@ -182,5 +190,11 @@ export default {
 <style lang="scss" scoped>
 .calendar-container {
     padding: 1rem;
+}
+
+.disableVerificationContainer {
+    position: absolute;
+    top: 50px;
+    right: 2%;
 }
 </style>

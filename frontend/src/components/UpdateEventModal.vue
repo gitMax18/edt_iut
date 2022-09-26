@@ -25,6 +25,7 @@
                     <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
                 </select>
             </div>
+
             <button @click.prevent="handleUpdate">Update</button>
             <button @click.prevent="handleDelete">Delete</button>
         </form>

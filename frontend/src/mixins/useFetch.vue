@@ -70,6 +70,7 @@ export default {
             //         return teacherObject.id;
             //     });
             // }
+            console.log("test", event);
             return {
                 course: event.extendedProps.course.id,
                 startAt: event.start,
@@ -77,6 +78,7 @@ export default {
                 classroom: event.extendedProps.classroom,
                 teacher: event.extendedProps.teacher?.id,
                 formation: event.extendedProps.formation.id,
+                isDisableVerification: event.isDisableVerification,
             };
         },
     },

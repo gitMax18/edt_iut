@@ -108,7 +108,6 @@ export default {
             this.toast.error(this.errorMessageApi);
             return;
         }
-        console.log(this.dataApi);
         this.formatFormations(this.dataApi.formations);
     },
 };

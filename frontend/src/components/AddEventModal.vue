@@ -25,6 +25,10 @@
                     <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
                 </select>
             </div>
+            <div class="input-container">
+                <label for="disableVerification">Désactiver la vérification</label>
+                <input type="checkbox" name="isDisableVerification" id="isDisableVerification" v-model="isDisableVerification" />
+            </div>
             <button @click.prevent="handleSubmit">Valider</button>
         </form>
         <button class="exit-btn" @click="$emit('handleCloseModal')">X</button>
@@ -55,6 +59,7 @@ export default {
             teacher: {},
             classroomTypes: classroomType,
             choosenClassroom: "",
+            isDisableVerification: false,
         };
     },
     methods: {
@@ -63,6 +68,7 @@ export default {
                 title: this.course.name,
                 start: this.selectedDates.startStr,
                 end: this.selectedDates.endStr,
+                isDisableVerification: this.isDisableVerification,
                 extendedProps: {
                     classroom: this.choosenClassroom,
                     teacher: this.teacher,
