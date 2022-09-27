@@ -13,6 +13,10 @@
             <input type="number" name="year" id="year" v-model="year" />
         </div>
         <div class="input-container">
+            <label for="groupeNb">Nombre de groupe</label>
+            <input type="number" name="groupeNb" id="groupeNb" v-model="groupeNb" />
+        </div>
+        <div class="input-container">
             <label for="responsable">Responsable</label>
             <select name="responsable" id="responsable" v-model="responsable">
                 <option value="">Choisissez un responsable</option>
@@ -25,7 +29,7 @@
 
 <script>
 import useFetch from "../mixins/useFetch.vue";
-import { useToast } from "vue-toastification";
+import useToast from "../mixins/useToast.vue";
 export default {
     name: "AddFormation",
     mixins: [useFetch, useToast],
@@ -37,6 +41,7 @@ export default {
             responsable: "",
             appUsers: [],
             responsable: null,
+            groupeNb: 0,
         };
     },
     methods: {
@@ -46,14 +51,23 @@ export default {
                 sector: this.sector,
                 year: this.year,
                 responsable: this.responsable,
+                groupeNb: this.groupeNb,
             });
 
-            if (this.isErrorMessageApi) {
+            if (this.isFetchError) {
                 this.toast.error(this.errorMessageApi);
                 return;
             }
             console.log("data", this.dataApi);
             this.toast.success(this.dataApi.message);
+            this.resetData();
+        },
+        resetData() {
+            this.name = "";
+            this.sector = "";
+            this.year = "";
+            this.responsable = "";
+            this.groupeNb = 0;
         },
     },
     async mounted() {
@@ -63,7 +77,6 @@ export default {
             console.log(this.errorMessageApi);
             return;
         }
-
         this.appUsers = this.dataApi.users;
         console.log(this.dataApi.message);
     },

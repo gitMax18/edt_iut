@@ -1,15 +1,21 @@
 <template>
     <div class="main-container">
-        <AsideLeft class="left" @handleSelectFormation="handleSelectFormation" :formations="formations"
-            :isAddFormation="isAddFormation" @handleAddFormation="handleAddFormation" @handleAddCourse="handleAddCourse"
-            @handleShowReporting="handleShowReporting" @handleAddCsvCourse="handleAddCsvCourse"
-            @handleAddCsvTeacher="handleAddCsvTeacher" />
-        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse"
-            :isShowReporting="isShowReporting" />
+        <AsideLeft
+            class="left"
+            @handleSelectFormation="handleSelectFormation"
+            :formations="formations"
+            :isAddFormation="isAddFormation"
+            @handleAddFormation="handleAddFormation"
+            @handleAddCourse="handleAddCourse"
+            @handleAddUser="handleAddUser"
+            @handleShowReporting="handleShowReporting"
+            @handleMassiveImport="handleMassiveImport"
+        />
+        <Callendar class="right" :formation="formation" v-if="formation && !isAddFormation && !isAddCourse && !isShowMassiveImport" :isShowReporting="isShowReporting" />
         <AddFormation class="right" v-if="isAddFormation" />
         <AddCourse class="right" :formations="formations" v-if="isAddCourse" />
-        <AddCsvCourse class="right" v-if="isAddCsvCourse" />
-        <AddCsvTeacher class="right" v-if="isAddCsvTeacher" />
+        <AddUser class="right" v-if="isAddUser" />
+        <MassiveImport class="right" v-if="isShowMassiveImport" />
         <Loader v-if="isLoadingApi" />
     </div>
 </template>
@@ -18,22 +24,23 @@
 import Callendar from "../components/Callendar.vue";
 import AsideLeft from "../components/AsideLeft.vue";
 import useFetch from "../mixins/useFetch.vue";
+import useToast from "../mixins/useToast.vue";
 import Loader from "../components/Loader.vue";
 import AddFormation from "../components/AddFormation.vue";
 import AddCourse from "../components/AddCourse.vue";
-import AddCsvCourse from '../components/AddCsvCourse.vue'
-import AddCsvTeacher from '../components/AddCsvTeacher.vue'
+import MassiveImport from "../components/MassiveImport.vue";
+import AddUser from "../components/AddUser.vue";
 export default {
     name: "App",
-    mixins: [useFetch],
+    mixins: [useFetch, useToast],
     components: {
         Callendar,
         AsideLeft,
         Loader,
         AddFormation,
         AddCourse,
-        AddCsvCourse,
-        AddCsvTeacher
+        MassiveImport,
+        AddUser,
     },
     data() {
         return {
@@ -41,15 +48,17 @@ export default {
             formation: null,
             isAddFormation: false,
             isAddCourse: false,
-            isAddCsvCourse: false,
-            isAddCsvTeacher: false,
+            isAddUser: false,
             isShowReporting: false,
+            isShowMassiveImport: false,
         };
     },
     methods: {
         handleSelectFormation(formation) {
             this.isAddCourse = false;
             this.isAddFormation = false;
+            this.isShowMassiveImport = false;
+            this.isAddUser = false;
             this.formation = formation;
         },
         formatFormations(formationsArray) {
@@ -64,30 +73,31 @@ export default {
             });
         },
         handleAddFormation() {
-            if (this.isAddCourse) this.isAddCourse = false;
+            this.isShowMassiveImport = false;
+            this.isAddCourse = false;
+            this.isAddUser = false;
             this.isAddFormation = true;
         },
         handleAddCourse() {
-            if (this.isAddFormation) this.isAddFormation = false;
+            this.isAddFormation = false;
+            this.isShowMassiveImport = false;
+            this.isAddUser = false;
             this.isAddCourse = true;
+        },
+        handleAddUser() {
+            this.isAddFormation = false;
+            this.isShowMassiveImport = false;
+            this.isAddCourse = false;
+            this.isAddUser = true;
         },
         handleShowReporting() {
             this.isShowReporting = !this.isShowReporting;
         },
-        handleAddCsvCourse() {
+        handleMassiveImport() {
             this.isAddFormation = false;
             this.isAddCourse = false;
-            this.isAddCsvTeacher = false;
-
-            this.isAddCsvCourse = true;
-        },
-        handleAddCsvTeacher()
-        {
-        this.isAddFormation = false;
-        this.isAddCourse = false;
-        this.isAddCsvCourse = false;
-
-        this.isAddCsvTeacher = true;
+            this.isAddUser = false;
+            this.isShowMassiveImport = true;
         },
     },
 
@@ -95,10 +105,9 @@ export default {
         await this.fetchApi("formation");
 
         if (this.isFetchError) {
-            console.log(this.errorMessageApi);
+            this.toast.error(this.errorMessageApi);
             return;
         }
-        console.log(this.dataApi);
         this.formatFormations(this.dataApi.formations);
     },
 };

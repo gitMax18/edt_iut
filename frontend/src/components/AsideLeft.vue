@@ -1,8 +1,7 @@
 <template>
     <div class="aside-left-container">
-        <div class="logo">
-            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201"
-                height="84.5">
+        <div>
+            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
         </div>
         <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
@@ -13,20 +12,19 @@
             <div v-for="(value, key) in formations" :key="key" class="course-container">
                 <div class="course-sector" @click="handleShowSector(key)">{{ key }}</div>
                 <ul class="course-list" v-if="value.isShow">
-                    <li class="course-item" v-for="(formation, index) in value.formations"
-                        @click="handleClickFormation(formation)" :key="index">
+                    <li class="course-item" v-for="(formation, index) in value.formations" @click="handleClickFormation(formation)" :key="index">
                         {{ formation.name }}
                     </li>
                 </ul>
             </div>
         </template>
-        <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div>
-        <div class="aside-item" @click="handleClickPreferences">Mes préférences</div>
+        <!-- <div class="aside-item" @click="handleClickIndisponibility">Mes indisponibilitées</div> -->
+        <!-- <div class="aside-item" @click="handleClickPreferences">Mes préférences</div> -->
         <div class="aside-item" @click="handleClickReporting">Reporting</div>
         <div class="aside-item" @click="handleClickAddFormation">Ajouter une formation</div>
         <div class="aside-item" @click="handleClickAddCourse">Ajouter un cours</div>
-        <div class="aside-item" @click="handleClickAddCsvCourse">Ajouter une maquette de formation </div>
-        <div class="aside-item" @click="handleClickAddCsvTeacher">Ajouter une liste d'enseignants</div>
+        <div class="aside-item" @click="handleClickAddUser">Ajouter un utilisateur</div>
+        <div class="aside-item" @click="handleClickMassiveImport">Import massive</div>
     </div>
 </template>
 
@@ -36,7 +34,7 @@ import useFetch from "../mixins/useFetch.vue";
 export default {
     name: "asideLeft",
     mixins: [useFetch],
-    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleShowReporting", "handleAddCsvCourse", "handleAddCsvTeacher"],
+    emits: ["handleSelectFormation", "handleAddFormation", "handleAddCourse", "handleAddUser", "handleShowReporting", "handleMassiveImport"],
     props: {
         formations: {
             type: Object,
@@ -92,22 +90,17 @@ export default {
         handleClickAddCourse() {
             this.$emit("handleAddCourse");
         },
-        handleClickAddCsvCourse()
-        {
-        this.$emit("handleAddCsvCourse");
+        handleClickAddUser() {
+            this.$emit("handleAddUser");
         },
-        handleClickAddCsvTeacher()
-        {
-        this.$emit("handleAddCsvTeacher");
-},
+        handleClickMassiveImport() {
+            this.$emit("handleMassiveImport");
+        },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-
-
-
 .aside-left-container {
     padding: 2.2rem;
     min-height: 100vh;
@@ -117,7 +110,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin: 2.5rem 0
+    margin: 2.5rem 0;
 }
 
 .aside-item {

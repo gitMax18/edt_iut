@@ -27,7 +27,7 @@ class FormationController extends AbstractController
             "success" => true,
             "message" => "Formation ajouter avec success",
             "formations" => $formations,
-        ], 200, [], ["groups" => "formation:read"]);
+        ], 201, [], ["groups" => "formation:read"]);
     }
 
     /**
@@ -64,5 +64,58 @@ class FormationController extends AbstractController
                 "message" => $e->getMessage()
             ], 400);
         }
+    }
+
+
+    /**
+     * @Route("/api/formation/import", name="import_formations", methods={"POST"})
+     */
+    public function importUsers(Request $request, EntityManagerInterface $em, ManagerRegistry $doctrine): JsonResponse
+    {
+        $uploadCsv = $request->files->get("formations");
+        if (!$uploadCsv) {
+            return $this->json([
+                "success" => false,
+                "message" => "Nous n'avons pas pu récupérer votre fichier CSV"
+            ]);
+        }
+
+        $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/csv/formation';
+        $csvPath = $uploadCsv->move($destination, time() . '-' . $uploadCsv->getClientOriginalName());
+
+        $i = 0;
+
+        if (($fp = fopen($csvPath, "r")) !== false) {
+            while (($row = fgetcsv($fp, 1000, ';')) != false) {
+                if ($i == 0) {
+                    $i++;
+                } else {
+                    $responsable = $doctrine->getRepository(User::class)->find($row[3]);
+
+                    if (!$responsable) {
+                        return $this->json([
+                            "success" => false,
+                            "message" => "Nous n'avons pas pu récupérer le responsable de formation, veuillez essayer avec un autre ID"
+                        ]);
+                    }
+
+                    $formation = new Formation();
+                    $formation->setName($row[0])
+                        ->setSector($row[1])
+                        ->setYear($row[2])
+                        ->setResponsable($responsable)
+                        ->setGroupeNb($row[4]);
+
+                    $em->persist($formation);
+                    $i++;
+                }
+            }
+        }
+        $em->flush();
+
+        return $this->json([
+            "success" => true,
+            "message" => $i . " formations ajouté avec succès"
+        ], 201);
     }
 }

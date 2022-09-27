@@ -61,35 +61,38 @@ class EventController extends AbstractController
         ], 200, [], ["groups" => "event:read"]);
     }
 
-
     /**
      * @Route("/api/event", name="add_event", methods={"POST"})
      */
     public function addEvent(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator, ManagerRegistry $doctrine)
     {
-
         $content = $request->toArray();
 
-        $events = $doctrine->getRepository(Event::class)->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+        if ($content["isDisableVerification"] == false) {
+            if (isset($content["teacher"])) {
 
-        if (!empty($events)) {
-            return $this->json([
-                "success" => false,
-                "message" => "Ce professeur à déja cours pendant ces dates",
-                "events" => $events
-            ]);
+                $events = $doctrine->getRepository(Event::class)->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+                if (!empty($events)) {
+                    return $this->json([
+                        "success" => false,
+                        "message" => "Ce professeur à déja cours pendant ces dates",
+                        "events" => $events
+                    ], 200, [], ["groups" => "event:read"]);
+                }
+            }
         }
 
         $json = $request->getContent();
-
         $course = $doctrine->getRepository(Course::class)->find($content["course"]);
-        $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
         $formation = $doctrine->getRepository(Formation::class)->find($content["formation"]);
 
         try {
             $event = $serializer->deserialize($json, Event::class, 'json', ['groups' => 'event:read']);
+            if (isset($content["teacher"])) {
+                $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
+                $event->setTeacher($teacher);
+            }
             $event->setCourse($course)
-                ->setTeacher($teacher)
                 ->setFormation($formation);
 
             $em->persist($event);
@@ -145,24 +148,34 @@ class EventController extends AbstractController
                 "message" => "Aucun event trouvé",
             ], 400);
         }
-        $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
-        $events = array_filter($events, function ($val) use ($id) {
-            return $val[0]->getId() != $id;
-        });
+        if (!isset($content["isDisableVerification"]) or $content["isDisableVerification"] == false) {
+            if (isset($content["teacher"])) {
+                $events = $repository->findByTeacherAndDates($content["teacher"], new DateTime($content["startAt"]), new DateTime($content["endAt"]));
+                $events = array_filter($events, function ($val) use ($id) {
+                    return $val[0]->getId() != $id;
+                });
 
-        if (!empty($events)) {
-            return $this->json([
-                "success" => false,
-                "message" => "Ce professeur à déja cour pendant ces dates",
-                "events" => $events
-            ], 200, [], ["groups" => "event:read"]);
+                if (!empty($events)) {
+                    return $this->json([
+                        "success" => false,
+                        "message" => "Ce professeur à déja cour pendant ces dates",
+                        "events" => $events
+                    ], 200, [], ["groups" => "event:read"]);
+                }
+            }
         }
 
         $course = $doctrine->getRepository(Course::class)->find($content["course"]);
-        $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
+
+
+        if (isset($content["teacher"])) {
+            $teacher = $doctrine->getRepository(User::class)->find($content["teacher"]);
+            $event->setTeacher($teacher);
+        } else {
+            $event->removeTeacher();
+        }
 
         $event->setCourse($course);
-        $event->setTeacher($teacher);
         $event->setClassroom($content["classroom"]);
         $event->setStartAt(new DateTimeImmutable($content["startAt"]));
         $event->setEndAt(new DateTimeImmutable($content["endAt"]));

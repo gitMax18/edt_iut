@@ -16,6 +16,12 @@
             </select>
         </div>
         <div class="input-container">
+            <label for="teacher">Type de cour</label>
+            <select name="teacher" id="teacher" v-model="teacher">
+                <option v-for="(type, index) in courseType" :key="index" :value="type">{{ type }}</option>
+            </select>
+        </div>
+        <div class="input-container">
             <label for="responsable">Formation</label>
             <select name="formation" id="formation" v-model="formation">
                 <optgroup v-for="(sector, key) in formations" :key="sector" :label="key">
@@ -42,6 +48,7 @@
 <script>
 import useFetch from "../mixins/useFetch.vue";
 import useToast from "../mixins/useToast.vue";
+import { courseType } from "@/etc.js";
 export default {
     name: "AddCourse",
     mixins: [useFetch, useToast],
@@ -58,6 +65,7 @@ export default {
             borderColor: "#000000",
             backgroundColor: "#f1f1f1",
             appUsers: [],
+            courseType: courseType,
         };
     },
     methods: {
@@ -76,6 +84,7 @@ export default {
                 this.toast.error(this.errorMessageApi);
                 return;
             }
+            console.log("data", this.dataApi);
             this.toast.success(this.dataApi.message);
         },
     },

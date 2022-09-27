@@ -18,6 +18,12 @@
         />
         <Loader v-if="isLoadingApi" />
         <Reporting :events="calendarOptions.events" :courses="formationCourses" v-if="isShowReporting" />
+        <div class="disableVerificationContainer">
+            <div>
+                <label for="isDisableVerification">Désactiver la vérification</label>
+                <input type="checkbox" id="isDisableVerification" v-model="isDisableVerification" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -66,11 +72,11 @@ export default {
                     right: "dayGridMonth,timeGridWeek,timeGridDay",
                 },
                 buttonText: {
-                today: 'Aujourd\'hui',
-                month: 'Mois',
-                week: 'Semaine',
-                day: 'Jour',
-                list: 'Liste'
+                    today: "Aujourd'hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste",
                 },
                 weekNumbers: true,
                 initialView: "timeGridWeek",
@@ -80,8 +86,8 @@ export default {
                 timeZone: "local",
                 locale: "fr",
                 allDaySlot: false,
-                slotMinTime: "06:00:00",
-                slotMaxTime: "19:00:00",
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
                 slotDuration: "00:15:00",
                 events: [],
                 select: this.handleDateSelect,
@@ -97,6 +103,7 @@ export default {
             isUpdateModalShow: false,
             selectedDates: null,
             formationCourses: [],
+            isDisableVerification: false,
         };
     },
     methods: {
@@ -105,28 +112,30 @@ export default {
             this.isCreateModalShow = true;
         },
         handleEventClick(clickData) {
+            console.log("click", clickData.event);
             this.selectedDates = clickData;
             this.isUpdateModalShow = true;
         },
         handleEvents() {},
         handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
-            await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
-                course: dataEvent.event.extendedProps.course.id,
-                teacher: dataEvent.event.extendedProps.teacher.id,
-                classroom: dataEvent.event.extendedProps.classroom,
-                startAt: dataEvent.event.startStr,
-                endAt: dataEvent.event.endStr,
-            });
+            if (dataEvent.oldEvent.startStr !== dataEvent.event.startStr) {
+                await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
+                    course: dataEvent.event.extendedProps.course.id,
+                    teacher: dataEvent.event.extendedProps.teacher?.id,
+                    classroom: dataEvent.event.extendedProps.classroom,
+                    startAt: dataEvent.event.startStr,
+                    endAt: dataEvent.event.endStr,
+                    isDisableVerification: this.isDisableVerification,
+                });
+                if (this.isFetchError) {
+                    dataEvent.revert();
+                    this.toast.error(this.errorMessageApi);
+                    return;
+                }
 
-            if (this.isFetchError) {
-                dataEvent.revert();
-                this.toast.error(this.errorMessageApi);
-                return;
+                this.toast.success(this.dataApi.message);
             }
-
-            // this.toast.success(this.dataApi.message);
-            console.log(this.dataApi.message);
         },
         handleRemoveEvent() {},
         toggleShowWeekend() {
@@ -136,7 +145,10 @@ export default {
             const textTime = document.createElement("p");
             textTime.innerHTML = `${args.timeText}`;
             const textContent = document.createElement("p");
-            textContent.innerHTML = `${args.event.title} / ${args.event.extendedProps.classroom} / ${args.event.extendedProps.teacher.firstname}`;
+            const title = args.event.extendedProps.course.groupe ? args.event.title + ` groupe : ${args.event.extendedProps.course.groupe}` : args.event.title;
+            textContent.innerHTML = `${title} / ${args.event.extendedProps.classroom} / ${
+                args.event.extendedProps.teacher?.firstname + " " + args.event.extendedProps.teacher?.lastname || "Non assignée"
+            }`;
             const arrayOfDomNodes = [textTime, textContent];
             return { domNodes: arrayOfDomNodes };
         },
@@ -171,13 +183,19 @@ export default {
 
     async mounted() {
         this.calendarApi = this.$refs.calendar.getApi();
+        console.log(new Date(this.calendarApi.getDate()).getFullYear());
     },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .calendar-container {
     padding: 1rem;
+}
+
+.disableVerificationContainer {
+    position: absolute;
+    top: 50px;
+    right: 2%;
 }
 </style>

@@ -21,26 +21,28 @@ class CourseFixtures extends Fixture implements DependentFixtureInterface
         $this->faker = Factory::create("fr-FR");
 
         $teacher = new User;
-        $teacher->setFirstName("Pierre")
-            ->setLastname("Cavailler")
+        $teacher->setFirstName("Gille")
+            ->setLastname("Enee")
             ->setRole("ADMIN")
             ->setCreatedAt(new DateTimeImmutable());
+        $manager->persist($teacher);
 
 
         $formation = $manager->getRepository(Formation::class)->findOneBy(["name" => "LP MIAW"]);
 
         $course = new Course;
         $course->setName("PHP")
-            ->setHours(12);
-        $course->addTeacher($teacher);
-        $course->setFormation($formation);
+            ->setHours(12)
+            ->setType("CM")
+            ->addTeacher($teacher)
+            ->setFormation($formation);
 
-        $manager->persist($teacher);
+
         $manager->persist($course);
 
 
         $teacher2 = new User;
-        $teacher2->setFirstName("roger")
+        $teacher2->setFirstName("Roger")
             ->setLastname("Elon")
             ->setRole("ADMIN")
             ->setCreatedAt(new DateTimeImmutable());
@@ -49,13 +51,26 @@ class CourseFixtures extends Fixture implements DependentFixtureInterface
 
         $course2 = new Course;
         $course2->setName("Marketing")
-            ->setHours(12);
+            ->setHours(12)
+            ->setType("TP");
         $course2->addTeacher($teacher2);
         $course2->setFormation($formation2);
 
         $manager->persist($teacher2);
         $manager->persist($course2);
 
+
+        $formation3 = $manager->getRepository(Formation::class)->findOneBy(["name" => "BUT 1", "sector" => "GEA"]);
+        for ($i = 1; $i <= 3; $i++) {
+            $course3 = new Course();
+            $course3->setName("test")
+                ->setHours(12)
+                ->setType("TP")
+                ->addTeacher($teacher)
+                ->setFormation($formation3)
+                ->setGroupe($i);
+            $manager->persist($course3);
+        }
         $manager->flush();
     }
 
