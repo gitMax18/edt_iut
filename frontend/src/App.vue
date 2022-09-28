@@ -79,17 +79,32 @@ input[type="color"] {
 }
 
 .section-form {
-    height: 100vh;
+    height: 99vh;
     display: flex;
     justify-content: center;
     align-items: center;
     form {
+        padding: 3rem;
         width: 50%;
-        min-width: 30rem;
+        min-width: 35rem;
+        background-color: white;
     }
 }
 
 .fc-theme-standard {
     max-height: 95vh !important;
+}
+
+.fc-button {
+    background-color: $color-primary !important;
+    border: 1px solid white !important;
+    &-active {
+        background-color: $color-primary-light !important;
+        border: none !important;
+        outline: none !important;
+    }
+    &:hover {
+        background-color: $color-primary-light !important;
+    }
 }
 </style>

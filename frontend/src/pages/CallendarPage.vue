@@ -125,14 +125,18 @@ export default {
 
 .left {
     width: 20%;
+    max-width: 25rem;
     border-right: 2px solid black;
 }
 .right {
     width: 80%;
     position: relative;
     padding: 0.5rem;
+    flex-grow: 1;
     /* background: #283c86;
     background: -webkit-linear-gradient(to right, #45a247, #283c86);
     background: linear-gradient(180deg, #45a247, #283c86); */
+    background-color: #0093e9;
+    background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
 }
 </style>

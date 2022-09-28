@@ -31,18 +31,21 @@
                     </optgroup>
                 </select>
             </div>
-            <div class="input-container">
-                <label for="backgroundColor">Couleur du fond</label>
-                <input type="color" name="backgroundColor" id="backgroundColor" v-model="backgroundColor" />
+            <div class="colors-container">
+                <div class="input-container">
+                    <label for="backgroundColor">Couleur du fond</label>
+                    <input type="color" name="backgroundColor" id="backgroundColor" v-model="backgroundColor" />
+                </div>
+                <div class="input-container">
+                    <label for="borderColor">Couleur de la bordure</label>
+                    <input type="color" name="borderColor" id="borderColor" v-model="borderColor" required />
+                </div>
+                <div class="input-container">
+                    <label for="textColor">Couleur du texte</label>
+                    <input type="color" name="textColor" id="textColor" v-model="textColor" required />
+                </div>
             </div>
-            <div class="input-container">
-                <label for="borderColor">Couleur de la bordure</label>
-                <input type="color" name="borderColor" id="borderColor" v-model="borderColor" required />
-            </div>
-            <div class="input-container">
-                <label for="textColor">Couleur du texte</label>
-                <input type="color" name="textColor" id="textColor" v-model="textColor" required />
-            </div>
+
             <AppButton @handleClick="handleClick">Valider</AppButton>
         </form>
     </div>
@@ -108,4 +111,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.colors-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+</style>

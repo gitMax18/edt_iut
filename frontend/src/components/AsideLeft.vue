@@ -1,8 +1,7 @@
 <template>
     <div class="aside-left-container">
-        <div>
-            <img src="../assets/images/iut-logo.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
-        </div>
+        <img src="../assets/images/iut-logo.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
+
         <!-- <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
             <AppButton message="S'enregistrer" @handleClick="handleClickRegister" />
@@ -155,9 +154,8 @@ export default {
 }
 
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 6rem 0 5.5rem 0;
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 5rem;
 }
 </style>

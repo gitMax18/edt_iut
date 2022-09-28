@@ -59,8 +59,10 @@ export default {
 }
 
 .import-container {
-    min-width: 30rem;
+    min-width: 35rem;
     width: 50%;
+    background-color: white;
+    padding: 3rem;
 }
 
 form {
