@@ -99,6 +99,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    bottom: 0%;
+    z-index: 1000;
+    background-color: snow;
+    width: 100%;
+    padding-bottom: 1rem;
 }
 
 .course-container {
@@ -106,5 +112,29 @@ export default {
 }
 .course-title {
     color: $color-primary-dark;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    tr:nth-child(even) {
+        background-color: #ddd;
+    }
+
+    tr:hover {
+        background-color: $color-primary;
+        color: white;
+    }
+    th {
+        background-color: $color-primary;
+        color: white;
+        padding: 0.5rem;
+        font-size: 1.5rem;
+    }
+    td {
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 0.5rem;
+    }
 }
 </style>

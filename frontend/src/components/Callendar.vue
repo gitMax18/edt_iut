@@ -18,11 +18,9 @@
         />
         <Loader v-if="isLoadingApi" />
         <Reporting :events="calendarOptions.events" :courses="formationCourses" v-if="isShowReporting" />
-        <div class="disableVerificationContainer">
-            <div>
-                <label for="isDisableVerification">Désactiver la vérification</label>
-                <input type="checkbox" id="isDisableVerification" v-model="isDisableVerification" />
-            </div>
+        <div class="disbaleVerificationForm" :class="{ disable: isDisableVerification }">
+            <input type="checkbox" id="isDisableVerification" v-model="isDisableVerification" />
+            <label class="label" for="isDisableVerification">Désactiver la vérification</label>
         </div>
     </div>
 </template>
@@ -119,7 +117,7 @@ export default {
         handleEvents() {},
         handleAddEvent() {},
         async handleChangeEvent(dataEvent) {
-            if (dataEvent.oldEvent.startStr !== dataEvent.event.startStr) {
+            if (dataEvent.oldEvent.startStr !== dataEvent.event.startStr || dataEvent.oldEvent.endStr !== dataEvent.event.endStr) {
                 await this.fetchApi(`event/${dataEvent.event.id}`, "PUT", {
                     course: dataEvent.event.extendedProps.course.id,
                     teacher: dataEvent.event.extendedProps.teacher?.id,
@@ -189,13 +187,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.calendar-container {
-    padding: 1rem;
-}
-
 .disableVerificationContainer {
     position: absolute;
-    top: 50px;
+    bottom: -1rem;
     right: 2%;
+    background-color: $color-primary;
+    z-index: 10000;
+}
+
+.disbaleVerificationForm {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 35rem;
+    background-color: $color-primary;
+}
+
+.label {
+    width: 100%;
+    color: white;
+}
+
+.disable {
+    background-color: red;
+}
+
+.calendar-container {
+    background-color: white;
 }
 </style>

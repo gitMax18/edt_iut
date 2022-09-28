@@ -1,23 +1,23 @@
 //colors
-$color-primary: #086BB2;
-$color-secondary: #FFFBFC;
-$color-primary-dark: #1A1423;
-$color-primary-light: #7ba0c5;
+$color-primary: #086bb2;
+$color-secondary: #fffbfc;
+$color-primary-dark: #1a1423;
+$color-primary-light: #4e8ac6;
 //others
 $border-radius: 0.5rem;
 //fonts
 @mixin font-family-light() {
-    font-family: 'Lato',sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 300;
 }
 
 @mixin font-family-regular() {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 400;
 }
 
 @mixin font-family-bold() {
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-weight: 700;
 }
 

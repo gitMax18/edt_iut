@@ -1,27 +1,34 @@
 <template>
-    <form>
-        <div class="input-container">
-            <label for="name">Prénom</label>
-            <input type="text" name="name" id="name" v-model="firstname" />
-        </div>
-        <div class="input-container">
-            <label for="sector">Nom</label>
-            <input type="text" name="sector" id="sector" v-model="lastname" />
-        </div>
-        <div class="input-container">
-            <label for="year">Email</label>
-            <input type="number" name="year" id="year" v-model="email" />
-        </div>
-        <button @click.prevent="handleClick">Valider</button>
-    </form>
+    <div class="section-form">
+        <form>
+            <h1 class="section-title">Ajouter un utilisateur</h1>
+            <div class="input-container">
+                <label for="name">Prénom</label>
+                <input type="text" name="name" id="name" v-model="firstname" />
+            </div>
+            <div class="input-container">
+                <label for="sector">Nom</label>
+                <input type="text" name="sector" id="sector" v-model="lastname" />
+            </div>
+            <div class="input-container">
+                <label for="year">Email</label>
+                <input type="number" name="year" id="year" v-model="email" />
+            </div>
+            <AppButton @handleClick="handleClick">Valider</AppButton>
+        </form>
+    </div>
 </template>
 
 <script>
 import useFetch from "../mixins/useFetch.vue";
 import useToast from "../mixins/useToast.vue";
+import AppButton from "./AppButton.vue";
 export default {
     name: "AddUser",
     mixins: [useFetch, useToast],
+    components: {
+        AppButton,
+    },
     data() {
         return {
             firstname: "",

@@ -1,12 +1,12 @@
 <template>
     <div class="aside-left-container">
         <div>
-            <img src="/img/logo_cfa.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
+            <img src="../assets/images/iut-logo.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
         </div>
-        <div class="auth-container">
+        <!-- <div class="auth-container">
             <AppButton message="Connexion" @handleClick="handleClickLogin" />
             <AppButton message="S'enregistrer" @handleClick="handleClickRegister" />
-        </div>
+        </div> -->
         <div class="aside-item" @click="handleClickPlanning">Emplois du temps</div>
         <template v-if="isPlanningShow">
             <div v-for="(value, key) in formations" :key="key" class="course-container">
@@ -103,7 +103,8 @@ export default {
 <style lang="scss" scoped>
 .aside-left-container {
     padding: 2.2rem;
-    min-height: 100vh;
+    // min-height: 100vh;
+    min-width: 230px;
 }
 .auth-container {
     display: flex;

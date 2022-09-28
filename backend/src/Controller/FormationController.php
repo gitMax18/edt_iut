@@ -38,12 +38,19 @@ class FormationController extends AbstractController
         $content = $request->toArray();
         $json = $request->getContent();
 
+        if (!isset($content["responsable"])) {
+            return $this->json([
+                "success" => false,
+                "message" => "Veuillez ajouter un responsable"
+            ]);
+        }
+
         $responsable = $doctrine->getRepository(User::class)->find($content["responsable"]);
 
         if (!$responsable) {
             return $this->json([
                 "success" => false,
-                "message" => "Veuillez ajouter un responsable"
+                "message" => "Veuillez ajouter un responsable valide"
             ]);
         }
 

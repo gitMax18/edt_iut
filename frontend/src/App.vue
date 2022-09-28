@@ -42,4 +42,54 @@ body {
 .fc-event-main {
     padding: 3px;
 }
+
+.modal-title {
+    font-size: 2rem;
+    color: $color-primary;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: $color-primary;
+    border-bottom: 2px solid $color-primary;
+    margin-bottom: 1.5rem;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+input,
+option,
+select {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+input[type="color"] {
+    height: 5rem;
+}
+
+.section-form {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    form {
+        width: 50%;
+        min-width: 30rem;
+    }
+}
+
+.fc-theme-standard {
+    max-height: 95vh !important;
+}
 </style>
