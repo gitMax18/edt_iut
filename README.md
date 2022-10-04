@@ -1,7 +1,6 @@
 # Projet Emploi du temps - IUT
 <!-- _(juste en dessous des badges sympatiques à placer)_ -->
 
-[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](http://forthebadge.com)   [![forthebadge](https://forthebadge.com/images/badges/made-with-vue.svg)](https://forthebadge.com)  [![forthebadge](https://forthebadge.com/images/badges/made-with-symfony.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-scss.svg)](http://forthebadge.com)
 
 Ce repository concerne le projet d'emploi du temps de l'IUT réalisé en 2022.
 
