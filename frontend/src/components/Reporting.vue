@@ -105,6 +105,7 @@ export default {
     background-color: snow;
     width: 100%;
     padding-bottom: 1rem;
+    transform: translateX(-5px);
 }
 
 .course-container {
