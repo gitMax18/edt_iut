@@ -39,6 +39,8 @@ class UserController extends AbstractController
 
         try {
             $user = $serializer->deserialize($json, User::class, 'json');
+            $user->setRole("ADMIN");
+            $user->setCreatedAt(new DateTimeImmutable());
 
             $em->persist($user);
             $em->flush();
@@ -82,7 +84,7 @@ class UserController extends AbstractController
                     $user = new User();
                     $user->setLastname($row[0])
                         ->setFirstName($row[1])
-                        ->setEmail($row[2])
+                        ->setEmail($row[2] || null)
                         ->setRole($row[3])
                         ->setCreatedAt(new DateTimeImmutable());
 

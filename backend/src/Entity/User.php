@@ -31,7 +31,7 @@ class User
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $email;
+    private $email = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $role;

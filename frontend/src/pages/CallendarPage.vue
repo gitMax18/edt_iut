@@ -1,7 +1,9 @@
 <template>
     <div class="main-container">
         <AsideLeft
+            @click="handleClickLeft"
             class="left"
+            ref="left"
             @handleSelectFormation="handleSelectFormation"
             :formations="formations"
             :isAddFormation="isAddFormation"
@@ -102,6 +104,12 @@ export default {
             this.isAddUser = false;
             this.isShowMassiveImport = true;
         },
+        // handleClickLeft() {
+        //     if (window.innerWidth <= 800) {
+        //         console.log(this.$refs.left.style);
+        //         this.$refs.left.style.width = "20%";
+        //     }
+        // },
     },
 
     async mounted() {
@@ -116,7 +124,7 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .main-container {
     display: flex;
     height: 100vh;
@@ -125,9 +133,26 @@ export default {
 
 .left {
     width: 20%;
-    max-width: 25rem;
-    border-right: 2px solid black;
+    max-width: 30rem;
+    padding: 2.2rem;
+    min-width: 25rem;
+    // @media (max-width: 800px) {
+    //     min-width: 0rem;
+    //     width: 0%;
+    //     padding: 0rem;
+    //     &::after {
+    //         content: "";
+    //         position: absolute;
+    //         left: 0;
+    //         top: 0;
+    //         height: 100%;
+    //         width: 2rem;
+    //         z-index: 10000;
+    //         background-color: white;
+    //     }
+    // }
 }
+
 .right {
     width: 80%;
     position: relative;
@@ -138,5 +163,9 @@ export default {
     background: linear-gradient(180deg, #45a247, #283c86); */
     background-color: #0093e9;
     background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+
+    // @media (max-width: 800px) {
+    //     padding-left: 3rem;
+    // }
 }
 </style>

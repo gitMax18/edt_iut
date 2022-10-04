@@ -59,7 +59,7 @@ export default {
 }
 
 .import-container {
-    min-width: 35rem;
+    min-width: 45rem;
     width: 50%;
     background-color: white;
     padding: 3rem;

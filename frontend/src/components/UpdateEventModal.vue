@@ -24,7 +24,7 @@
                     <select name="teacher" id="teacher" v-model="teacher">
                         <option v-if="teacher?.firstname" :value="teacher">{{ teacher.firstname + " " + teacher.lastname }}</option>
                         <option>Non choisie</option>
-                        <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname }}</option>
+                        <option v-for="teacher in course.teachers" :key="teacher.id" :value="teacher">{{ teacher.firstname + " " + teacher.lastname }}</option>
                     </select>
                 </div>
                 <div class="modal-btns">

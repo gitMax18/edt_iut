@@ -88,9 +88,9 @@ export default {
             return Math.abs(Math.round(diff));
         },
     },
-    mounted() {
-        console.log(this.courses);
-    },
+    // mounted() {
+    //     console.log(this.courses);
+    // },
 };
 </script>
 

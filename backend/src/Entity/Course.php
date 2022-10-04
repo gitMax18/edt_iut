@@ -58,6 +58,9 @@ class Course
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $textColor;
 
+    /** 
+     * @Groups({"event:read"})
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private $type;
     /** 

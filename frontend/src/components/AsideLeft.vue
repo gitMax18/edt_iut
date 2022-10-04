@@ -1,5 +1,5 @@
 <template>
-    <div class="aside-left-container">
+    <div class="aside-left-container" ref="left">
         <img src="../assets/images/iut-logo.png" alt="Institut Technologique de Nouvelle-Calédonie" class="logo" width="201" height="84.5" />
 
         <!-- <div class="auth-container">
@@ -101,9 +101,7 @@ export default {
 
 <style lang="scss" scoped>
 .aside-left-container {
-    padding: 2.2rem;
     // min-height: 100vh;
-    min-width: 230px;
 }
 .auth-container {
     display: flex;

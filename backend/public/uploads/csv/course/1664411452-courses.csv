@@ -1,0 +1,25 @@
+nom ;heures;professeurId;formationId;type;backgroundColor;borderColor;textColor
+PHP;35;1;1;CM;;;
+Responsive;30;2;1;CM;;;
+Dev mobile;40;3;1;CM;;;
+Securite informatique;25;4;1;CM;;;
+Anglais;18;5;1;CM;;;
+Modelisation;25;6;1;CM;;;
+Expression/Communication;35;7;2;CM;;;
+Communication des organisations;40;8;2;CM;;;
+techniques journalistique;25;9;2;CM;;;
+Droit de l'audiovisuel;40;10;2;CM;;;
+Gestion de projet;50;11;2;CM;;;
+Anglais;25;12;2;CM;;;
+Projet tuteure;70;13;3;CM;;;
+Marketing & distribution;35;14;3;TP;;;
+Anglais commercial;25;15;3;TP;;;
+Gestion comptable;17;16;3;TD;;;
+Technique commerciale;40;17;3;CM;;;
+methodologie de gestion de projet;38;18;3;CM;;;
+Droit du travail;40;19;4;CM;;;
+Ressource humaine;35;20;4;TD;;;
+Communication professionnel;25;1;4;CM;;;
+Comptabilite;35;2;4;CM;;;
+Fiscalite;40;3;4;TP;;;
+Economie du travail;45;4;4;CM;;;

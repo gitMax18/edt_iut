@@ -140,6 +140,7 @@ export default {
             this.calendarOptions.weekends = !this.calendarOptions.weekends;
         },
         displayEventText(args) {
+            console.log("event", args.event.extendedProps);
             const textTime = document.createElement("p");
             textTime.innerHTML = `${args.timeText}`;
             const textContent = document.createElement("p");
@@ -147,7 +148,9 @@ export default {
             textContent.innerHTML = `${title} / ${args.event.extendedProps.classroom} / ${
                 args.event.extendedProps.teacher?.firstname + " " + args.event.extendedProps.teacher?.lastname || "Non assignée"
             }`;
-            const arrayOfDomNodes = [textTime, textContent];
+            const type = document.createElement("p");
+            type.innerHTML = "/ " + args.event.extendedProps.course?.type || "CM";
+            const arrayOfDomNodes = [textTime, textContent, type];
             return { domNodes: arrayOfDomNodes };
         },
         handleCloseCreateModal() {

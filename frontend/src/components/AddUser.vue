@@ -11,8 +11,8 @@
                 <input type="text" name="sector" id="sector" v-model="lastname" />
             </div>
             <div class="input-container">
-                <label for="year">Email</label>
-                <input type="number" name="year" id="year" v-model="email" />
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" v-model="email" />
             </div>
             <AppButton @handleClick="handleClick">Valider</AppButton>
         </form>
