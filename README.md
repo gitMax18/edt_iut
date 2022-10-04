@@ -25,7 +25,7 @@ Vous pouvez soit :
 
 ### Démarrage
 
-* Ouvrez le dossier du projet avec votre éditeur de texte.
+* Ouvrer le dossier du projet avec votre éditeur de texte.
 * Exécuter wamp
 * Déplacer vous dans le répertoire "backend"
 * Modifier le fichier .env avec vos identifiants (login, mdp et nom de la base de données)
@@ -40,8 +40,6 @@ Vous pouvez soit :
 
 ### Fabriqué avec
 
-Ce projet à été réalisé avec:
-
 * [vue.js](https://vuejs.org/) - framework javascript (front-end)
 * [symfony](https://symfony.com/) - framework PHP (back-end)
 * [full calendar](https://fullcalendar.io/) - librairie javascript de calendrier (front-end)
@@ -51,7 +49,6 @@ Ce projet à été réalisé avec:
 
 
 ### Auteurs
-
 
 * **Maxime Jean** _alias_ [@gitMax18](https://github.com/gitMax18)
 * **Brice Courtot** _alias_ [@bcourtot](https://github.com/bcourtot)
