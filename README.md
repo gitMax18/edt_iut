@@ -25,18 +25,18 @@ Vous pouvez soit :
 
 ### Démarrage
 
-Ouvrez le dossier du projet avec votre éditeur de texte.
-Exécuter wamp
-Déplacer vous dans le répertoire "backend"
-Modifier le fichier .env avec vos identifiants (login, mdp et nom de la base de données)
-Ouvrer le terminal et entrer "composer install"
-Entrer "symfony server:start"
-Ouvrer un nouveau terminal et déplacer vous dans le répertoire "frontend"
-Entrer dans le terminal "npm install" 
-Entrer dans le terminal "npm run dev"
-Entrer l'adresse du serveur localhost:3000
+* Ouvrez le dossier du projet avec votre éditeur de texte.
+* Exécuter wamp
+* Déplacer vous dans le répertoire "backend"
+* Modifier le fichier .env avec vos identifiants (login, mdp et nom de la base de données)
+* Ouvrer le terminal et entrer "composer install"
+* Entrer "symfony server:start"
+* Ouvrer un nouveau terminal et déplacer vous dans le répertoire "frontend"
+* Entrer dans le terminal "npm install" 
+* Entrer dans le terminal "npm run dev"
+* Entrer l'adresse du serveur localhost:3000
 
-Pour remplir le calendrier avec des données de test, vous pouvez utiliser les csv dans le répertoire "dataCsv".
+* Pour remplir le calendrier avec des données de test, vous pouvez utiliser les csv dans le répertoire "dataCsv".
 
 ### Fabriqué avec
 
